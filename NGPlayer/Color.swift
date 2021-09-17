@@ -22,5 +22,13 @@ extension Color {
 	static var secondaryBackground: Color {
 		Color("SecondaryBackground")
 	}
+	
+	static var primaryFont: Color {
+		Color("PrimaryFont")
+	}
+	
+	static var secondaryFont: Color {
+		Color("SecondaryFont")
+	}
 
 }

@@ -19,33 +19,30 @@ struct PlaylistItemView: View {
 			Image(uiImage: image)
 				.resizable()
 				.scaledToFit()
-				.shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 5)
+				.frame(width: 45, height: 45, alignment: .center)
 				.onReceive(imageProvider.image(for: song.image)) { img in
 					image = img ?? UIImage(named: "AudioIconDefault")!
 				}
+				.padding(6)
+				.background(
+					Circle()
+						.stroke(
+							Color.accentColor,
+							style: StrokeStyle(lineWidth: isHighlighted ? 3.0 : 0.0)
+						)
+				)
 			VStack(alignment: .leading) {
 				Text(song.title)
 					.font(.system(size: 22, weight: .light))
+					.foregroundColor(.primaryFont)
 					.padding(.bottom, 4)
 				Text(song.author)
 					.font(.system(size: 14, weight: .regular))
-					.foregroundColor(.secondary)
+					.foregroundColor(.secondaryFont)
 			}
 			Spacer()
 		}
 		.frame(height: 70)
-		.padding()
-		.background(
-			RoundedRectangle(cornerRadius: 8)
-				.fill(Color(#colorLiteral(red: 0.999904573, green: 1, blue: 0.999872148, alpha: 1)))
-				.shadow(
-					color: isHighlighted
-						? .accentColor.opacity(0.3)
-						: .gray.opacity(0.2),
-					radius: 8,
-					x: 0,
-					y: 8))
-		.padding(.vertical, 8)
 		.padding(.horizontal, isHighlighted ? 16 : 32)
 
 	}

@@ -20,38 +20,43 @@ struct PlayerControlsView: View {
 	
 	var body: some View {
 		
-		HStack {
-			Button(action: onPrevious) {
-				Image(systemName: "backward.end")
-					.foregroundColor(Color.secondaryButtonForeground)
-			}
-			.padding(.horizontal, 64)
-			.padding(.vertical, 16)
-			Spacer()
+		VStack(spacing: 0) {
+			Divider()
 			
-			Button(action: {
-				if isPlaying {
-					onPause()
-				} else {
-					onPlay()
+			HStack(spacing: 0) {
+				Button(action: onPrevious) {
+					Image(systemName: "backward.end")
+						.foregroundColor(Color.secondaryButtonForeground)
 				}
-			}) {
-				Image(systemName: isPlaying ? "pause" : "play")
-					.foregroundColor(Color.primaryButtonForeground)
+				.padding(.horizontal, 64)
+				.padding(.vertical, 16)
+				Spacer()
+				
+				Button(action: {
+					if isPlaying {
+						onPause()
+					} else {
+						onPlay()
+					}
+				}) {
+					Image(systemName: isPlaying ? "pause" : "play")
+						.foregroundColor(Color.primaryButtonForeground)
+						.font(.system(size: 44, weight: .thin))
+				}
+				
+				Spacer()
+				Button(action: onNext) {
+					Image(systemName: "forward.end")
+						.foregroundColor(Color.secondaryButtonForeground)
+				}
+				.padding(.horizontal, 64)
 			}
-			
-			Spacer()
-			Button(action: onNext) {
-				Image(systemName: "forward.end")
-					.foregroundColor(Color.secondaryButtonForeground)
-			}
-			.padding(.horizontal, 64)
+			.font(.system(size: 32, weight: .thin))
+			.padding(.vertical)
+			.padding(.bottom, safeAreaInsets.bottom)
+			.padding(.leading, safeAreaInsets.leading)
+			.padding(.trailing, safeAreaInsets.trailing)
 		}
-		.font(.system(size: 32, weight: .thin))
-		.padding(.vertical)
-		.padding(.bottom, safeAreaInsets.bottom)
-		.padding(.leading, safeAreaInsets.leading)
-		.padding(.trailing, safeAreaInsets.trailing)
 		.background(Color.secondaryBackground)
 	}
 }

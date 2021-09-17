@@ -45,6 +45,8 @@ struct PlaylistView: View {
 										}
 									}
 									.id(i)
+								Divider()
+									.padding(.horizontal)
 							}
 							
 						}
