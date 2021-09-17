@@ -6,9 +6,19 @@
 //
 
 import SwiftUI
+import AVKit
 
 @main
 struct NGPlayerApp: App {
+	
+	init() {
+		let audioSession = AVAudioSession.sharedInstance()
+		do {
+			try audioSession.setCategory(.playback, mode: .default, options: [])
+		} catch {
+			print("Failed to set audio session category.")
+		}
+	}
     var body: some Scene {
         WindowGroup {
             PlaylistView()

@@ -56,6 +56,7 @@ struct PlaylistView: View {
 						withAnimation(.easeInOut(duration: 0.1)) {
 							proxy.scrollTo(currentItem)
 						}
+						viewmodel.play(song: viewmodel.songs[value])
 					})
 				}
 				

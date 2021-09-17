@@ -8,12 +8,24 @@
 import SwiftUI
 import SwiftSoup
 import Combine
+import AVKit
+
+struct SongSource: Codable {
+	let src: String
+}
+
+struct SongStorageInfo: Codable {
+	let id: UInt64
+	let sources: [SongSource]
+}
 
 class PlaylistViewModel: ObservableObject {
 	@Published var songs = [Song]()
 	@Published var isLoading = false
 	
+	private var player = AVPlayer()
 	private var mutexRequests = Set<AnyCancellable>()
+	private var playRequests = Set<AnyCancellable>()
 	
 	func load() {
 		mutexRequests.forEach { $0.cancel() }
@@ -44,21 +56,68 @@ class PlaylistViewModel: ObservableObject {
 					}
 					guard let details = try li.select(".item-details").first() else {
 						return nil
-
+						
 					}
 					let title = try details.select(".detail-title > h4").text()
 					let author = try details.select(".detail-title > span > strong").text()
-
+					
 					return Song(id: id, title: title, author: author, image: "", score: 0, duration: 0)
 				}
 			}
 			.receive(on: DispatchQueue.main)
-			.sink(receiveCompletion: { err in
-				print(err)
+			.sink(receiveCompletion: { result in
+				switch result {
+				case.failure(let err):
+					print(err)
+				default:
+					break
+				}
 			}, receiveValue: { [weak self] songs in
 				self?.isLoading = false
 				self?.songs = songs
 			})
 			.store(in: &mutexRequests)
+	}
+	
+	func play(song: Song) {
+		guard let url = URL(string: "https://www.newgrounds.com/audio/load/\(song.id)") else {
+			return
+		}
+		
+		playRequests.forEach { $0.cancel() }
+		playRequests.removeAll()
+		
+		var request = URLRequest(url: url)
+		request.setValue("XMLHttpRequest", forHTTPHeaderField: "X-Requested-With")
+		
+		URLSession.shared
+			.dataTaskPublisher(for: request).filter { (data, response) in
+				(response as? HTTPURLResponse)?.statusCode == 200
+			}
+			.map { (data, response) in
+				data
+			}
+			.decode(type: SongStorageInfo.self, decoder: JSONDecoder())
+			.compactMap { ssi in
+				URL(string: ssi.sources.first?.src ?? "")
+			}
+			.sink(receiveCompletion: { result in
+				switch result {
+				case .failure(let err):
+					print(err)
+				default:
+					break
+				}
+			}, receiveValue: { [weak self] src in
+				do {
+					try AVAudioSession.sharedInstance().setActive(true)
+					let item = AVPlayerItem(url: src)
+					self?.player.replaceCurrentItem(with: item)
+					self?.player.play()
+				} catch {
+					print("Failed to activate audio session")
+				}
+			})
+			.store(in: &playRequests)
 	}
 }
