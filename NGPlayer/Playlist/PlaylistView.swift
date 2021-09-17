@@ -8,20 +8,34 @@
 import SwiftUI
 
 struct PlaylistView: View {
+	@ObservedObject var viewmodel = PlaylistViewModel()
 	@State private var currentItem = 0
 	
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
 	
+	init(viewmodel: PlaylistViewModel = PlaylistViewModel()) {
+		self.viewmodel = viewmodel
+	}
+	
 	var body: some View {
 		ZStack(alignment: .bottom) {
+			if (viewmodel.isLoading) {
+				VStack(alignment: .center) {
+					Spacer()
+					ProgressView()
+						.progressViewStyle(CircularProgressViewStyle(tint: Color.accentColor))
+					Spacer()
+				}
+			}
 			ScrollView {
 				LazyVStack {
 					Spacer()
 						.frame(height: safeAreaInsets.top)
 					
-					ForEach(0...10, id: \.self) { i in
-						PlaylistItemView(isHighlighted: i == currentItem)
+					ForEach(viewmodel.songs.indices, id: \.self) { i in
+						let song = viewmodel.songs[i]
+						PlaylistItemView(song: song, isHighlighted: i == currentItem)
 							.padding(.leading, safeAreaInsets.leading)
 							.padding(.trailing, safeAreaInsets.trailing)
 							.onTapGesture {
@@ -35,23 +49,26 @@ struct PlaylistView: View {
 					Spacer()
 						.frame(height: safeAreaInsets.bottom + 128)
 				}
+				PlayerControlsView(
+					onPlay: {},
+					onPause: {},
+					onNext: {
+						withAnimation {
+							currentItem = min(currentItem + 1, viewmodel.songs.count)
+						}
+					},
+					onPrevious: {
+						withAnimation {
+							currentItem = max(currentItem - 1, 0)
+						}
+					})
 			}
-			PlayerControlsView(
-				onPlay: {},
-				onPause: {},
-				onNext: {
-					withAnimation {
-						currentItem = min(currentItem + 1, 10)
-					}
-				},
-				onPrevious: {
-					withAnimation {
-						currentItem = max(currentItem - 1, 0)
-					}
-				})
 		}
 		.ignoresSafeArea()
-		.background(Color(white: 0.98).ignoresSafeArea())
+		.background(Color.background.ignoresSafeArea())
+		.onAppear {
+			viewmodel.load()
+		}
 	}
 }
 

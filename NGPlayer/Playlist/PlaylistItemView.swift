@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PlaylistItemView: View {
+	let song: Song
 	let isHighlighted: Bool
 
 	var body: some View {
@@ -17,10 +18,10 @@ struct PlaylistItemView: View {
 				.scaledToFit()
 				.shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 5)
 			VStack(alignment: .leading) {
-				Text("Default Title")
+				Text(song.title)
 					.font(.system(size: 22, weight: .light))
 					.padding(.bottom, 4)
-				Text("by Somebody")
+				Text(song.author)
 					.font(.system(size: 14, weight: .regular))
 					.foregroundColor(.secondary)
 			}
@@ -46,6 +47,6 @@ struct PlaylistItemView: View {
 
 struct PlaylistItemView_Previews: PreviewProvider {
     static var previews: some View {
-        PlaylistItemView(isHighlighted: false)
+		PlaylistItemView(song: Song(id: 0, title: "Some song", author: "Somebody", image: "", score: 4.5, duration: 100), isHighlighted: false)
     }
 }
