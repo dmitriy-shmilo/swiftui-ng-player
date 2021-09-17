@@ -17,6 +17,7 @@
 		5DED697326F4C17700199A34 /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DED697226F4C17700199A34 /* PlayerControlsView.swift */; };
 		5DED697526F4CFD300199A34 /* PlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DED697426F4CFD300199A34 /* PlaylistViewModel.swift */; };
 		5DED697726F4D00100199A34 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DED697626F4D00100199A34 /* Song.swift */; };
+		5DED697926F51A9E00199A34 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DED697826F51A9E00199A34 /* ImageCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		5DED697226F4C17700199A34 /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
 		5DED697426F4CFD300199A34 /* PlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewModel.swift; sourceTree = "<group>"; };
 		5DED697626F4D00100199A34 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		5DED697826F51A9E00199A34 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 				5DE051DE26F4B227005FD7C1 /* Preview Content */,
 				5DED697026F4BF8400199A34 /* Color.swift */,
 				5DED697626F4D00100199A34 /* Song.swift */,
+				5DED697826F51A9E00199A34 /* ImageCache.swift */,
 			);
 			path = NGPlayer;
 			sourceTree = "<group>";
@@ -171,6 +174,7 @@
 			files = (
 				5DED697726F4D00100199A34 /* Song.swift in Sources */,
 				5DED697526F4CFD300199A34 /* PlaylistViewModel.swift in Sources */,
+				5DED697926F51A9E00199A34 /* ImageCache.swift in Sources */,
 				5DE051DB26F4B223005FD7C1 /* PlaylistView.swift in Sources */,
 				5DED697326F4C17700199A34 /* PlayerControlsView.swift in Sources */,
 				5DED697126F4BF8400199A34 /* Color.swift in Sources */,

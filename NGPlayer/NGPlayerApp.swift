@@ -22,6 +22,7 @@ struct NGPlayerApp: App {
     var body: some Scene {
         WindowGroup {
             PlaylistView()
+				.environmentObject(ImageProvider())
         }
     }
 }

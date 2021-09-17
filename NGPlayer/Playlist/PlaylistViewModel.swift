@@ -10,15 +10,6 @@ import SwiftSoup
 import Combine
 import AVKit
 
-struct SongSource: Codable {
-	let src: String
-}
-
-struct SongStorageInfo: Codable {
-	let id: UInt64
-	let sources: [SongSource]
-}
-
 class PlaylistViewModel: ObservableObject {
 	@Published var songs = [Song]()
 	@Published var isLoading = false
@@ -56,12 +47,13 @@ class PlaylistViewModel: ObservableObject {
 					}
 					guard let details = try li.select(".item-details").first() else {
 						return nil
-						
 					}
+					
 					let title = try details.select(".detail-title > h4").text()
 					let author = try details.select(".detail-title > span > strong").text()
+					let image = try URL(string: li.select(".item-icon img").first()?.attr("src") ?? "")
 					
-					return Song(id: id, title: title, author: author, image: "", score: 0, duration: 0)
+					return Song(id: id, title: title, author: author, image: image, score: 0, duration: 0)
 				}
 			}
 			.receive(on: DispatchQueue.main)
