@@ -13,7 +13,7 @@ struct PlayerControlsView: View {
 	let onNext: () -> Void
 	let onPrevious: () -> Void
 	
-	@State private var isPlaying = false
+	@Binding var isPlaying: Bool
 	
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
@@ -30,15 +30,14 @@ struct PlayerControlsView: View {
 			Spacer()
 			
 			Button(action: {
-				isPlaying.toggle()
 				if isPlaying {
-					onPlay()
-				} else {
 					onPause()
+				} else {
+					onPlay()
 				}
 			}) {
-				Image(systemName: isPlaying ? "play" : "pause")
-					.foregroundColor(Color.secondaryButtonForeground)
+				Image(systemName: isPlaying ? "pause" : "play")
+					.foregroundColor(Color.primaryButtonForeground)
 			}
 			
 			Spacer()
@@ -59,6 +58,6 @@ struct PlayerControlsView: View {
 
 struct PlayerControlsView_Previews: PreviewProvider {
 	static var previews: some View {
-		PlayerControlsView(onPlay: {}, onPause: {}, onNext: {}, onPrevious: {})
+		PlayerControlsView(onPlay: {}, onPause: {}, onNext: {}, onPrevious: {}, isPlaying: .constant(false))
 	}
 }

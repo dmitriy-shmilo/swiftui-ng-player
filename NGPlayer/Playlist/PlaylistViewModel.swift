@@ -13,6 +13,8 @@ import AVKit
 class PlaylistViewModel: ObservableObject {
 	@Published var songs = [Song]()
 	@Published var isLoading = false
+	@Published var isPlaying = false
+	@Published var currentSong: Song?
 	
 	private var player = AVPlayer()
 	private var mutexRequests = Set<AnyCancellable>()
@@ -71,11 +73,18 @@ class PlaylistViewModel: ObservableObject {
 			.store(in: &mutexRequests)
 	}
 	
+	// TODO: preload songs
 	func play(song: Song) {
 		guard let url = URL(string: "https://www.newgrounds.com/audio/load/\(song.id)") else {
 			return
 		}
 		
+		if currentSong?.id == song.id {
+			resume()
+			return
+		}
+
+		currentSong = song
 		playRequests.forEach { $0.cancel() }
 		playRequests.removeAll()
 		
@@ -93,6 +102,7 @@ class PlaylistViewModel: ObservableObject {
 			.compactMap { ssi in
 				URL(string: ssi.sources.first?.src ?? "")
 			}
+			.receive(on: DispatchQueue.main)
 			.sink(receiveCompletion: { result in
 				switch result {
 				case .failure(let err):
@@ -106,10 +116,26 @@ class PlaylistViewModel: ObservableObject {
 					let item = AVPlayerItem(url: src)
 					self?.player.replaceCurrentItem(with: item)
 					self?.player.play()
+					self?.isPlaying = true
 				} catch {
 					print("Failed to activate audio session")
 				}
 			})
 			.store(in: &playRequests)
+	}
+	
+	func resume() {
+		do {
+			try AVAudioSession.sharedInstance().setActive(true)
+			player.play()
+			isPlaying = true
+		} catch {
+			print("Failed to activate audio session")
+		}
+	}
+	
+	func pause() {
+		player.pause()
+		isPlaying = false
 	}
 }

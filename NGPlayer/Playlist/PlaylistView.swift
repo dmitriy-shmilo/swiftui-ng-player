@@ -61,8 +61,12 @@ struct PlaylistView: View {
 				}
 				
 				PlayerControlsView(
-					onPlay: {},
-					onPause: {},
+					onPlay: {
+						viewmodel.play(song: viewmodel.songs[currentItem])
+					},
+					onPause: {
+						viewmodel.pause()
+					},
 					onNext: {
 						withAnimation {
 							currentItem = min(currentItem + 1, viewmodel.songs.count)
@@ -72,7 +76,8 @@ struct PlaylistView: View {
 						withAnimation {
 							currentItem = max(currentItem - 1, 0)
 						}
-					})
+					},
+					isPlaying: $viewmodel.isPlaying)
 			}
 		}
 		.ignoresSafeArea()
