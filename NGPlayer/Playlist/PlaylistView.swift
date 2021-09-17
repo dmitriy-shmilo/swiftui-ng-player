@@ -19,6 +19,7 @@ struct PlaylistView: View {
 	}
 	
 	var body: some View {
+		
 		ZStack(alignment: .bottom) {
 			if (viewmodel.isLoading) {
 				VStack(alignment: .center) {
@@ -28,27 +29,36 @@ struct PlaylistView: View {
 					Spacer()
 				}
 			}
-			ScrollView {
-				LazyVStack {
-					Spacer()
-						.frame(height: safeAreaInsets.top)
-					
-					ForEach(viewmodel.songs.indices, id: \.self) { i in
-						let song = viewmodel.songs[i]
-						PlaylistItemView(song: song, isHighlighted: i == currentItem)
-							.padding(.leading, safeAreaInsets.leading)
-							.padding(.trailing, safeAreaInsets.trailing)
-							.onTapGesture {
-								withAnimation {
-									self.currentItem = i
-								}
+			VStack(spacing: 0) {
+				ScrollViewReader { proxy in
+					ScrollView {
+						LazyVStack {
+							Spacer()
+								.frame(height: safeAreaInsets.top)
+							
+							ForEach(viewmodel.songs.indices, id: \.self) { i in
+								let song = viewmodel.songs[i]
+								PlaylistItemView(song: song, isHighlighted: i == currentItem)
+									.padding(.leading, safeAreaInsets.leading)
+									.padding(.trailing, safeAreaInsets.trailing)
+									.onTapGesture {
+										withAnimation {
+											self.currentItem = i
+										}
+									}
+									.id(i)
 							}
+							
+						}
+						
 					}
-
-					// TODO: un-magic this number
-					Spacer()
-						.frame(height: safeAreaInsets.bottom + 128)
+					.onChange(of: currentItem, perform: { value in
+						withAnimation(.easeInOut(duration: 0.1)) {
+							proxy.scrollTo(currentItem)
+						}
+					})
 				}
+				
 				PlayerControlsView(
 					onPlay: {},
 					onPause: {},
