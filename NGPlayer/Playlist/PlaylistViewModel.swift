@@ -14,11 +14,30 @@ class PlaylistViewModel: ObservableObject {
 	@Published var songs = [Song]()
 	@Published var isLoading = false
 	@Published var isPlaying = false
-	@Published var currentSong: Song?
+	@Published var currentIndex: Int = 0
+	
+	var currentSong: Song? {
+		currentIndex < 0 || currentIndex >= songs.count ? nil : songs[currentIndex]
+	}
 	
 	private var player = AVPlayer()
 	private var mutexRequests = Set<AnyCancellable>()
 	private var playRequests = Set<AnyCancellable>()
+	private var subs = Set<AnyCancellable>()
+	
+	init() {
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(onPlayerComplete),
+			name: .AVPlayerItemDidPlayToEndTime,
+			object: player.currentItem
+		)
+		player.rate = 3.0
+	}
+	
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
 	
 	func load() {
 		mutexRequests.forEach { $0.cancel() }
@@ -74,17 +93,23 @@ class PlaylistViewModel: ObservableObject {
 	}
 	
 	// TODO: preload songs
-	func play(song: Song) {
-		guard let url = URL(string: "https://www.newgrounds.com/audio/load/\(song.id)") else {
+	func play(index: Int) {
+		guard index >= 0 && index <= songs.count else {
+			print("Request to play at an invalid index: \(index)")
 			return
 		}
 		
-		if currentSong?.id == song.id {
+		let song = songs[index]
+		let url = URL(string: "https://www.newgrounds.com/audio/load/\(song.id)")!
+		
+		if currentIndex == index {
 			resume()
 			return
+		} else {
+			currentIndex = index
 		}
 
-		currentSong = song
+		player.replaceCurrentItem(with: nil)
 		playRequests.forEach { $0.cancel() }
 		playRequests.removeAll()
 		
@@ -124,6 +149,14 @@ class PlaylistViewModel: ObservableObject {
 			.store(in: &playRequests)
 	}
 	
+	func playNex() {
+		play(index: currentIndex + 1)
+	}
+	
+	func playPrev() {
+		play(index: currentIndex - 1)
+	}
+	
 	func resume() {
 		do {
 			try AVAudioSession.sharedInstance().setActive(true)
@@ -137,5 +170,9 @@ class PlaylistViewModel: ObservableObject {
 	func pause() {
 		player.pause()
 		isPlaying = false
+	}
+	
+	@objc private func onPlayerComplete() {
+		playNex()
 	}
 }

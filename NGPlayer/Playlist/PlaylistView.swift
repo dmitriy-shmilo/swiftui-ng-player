@@ -9,8 +9,6 @@ import SwiftUI
 
 struct PlaylistView: View {
 	@ObservedObject var viewmodel = PlaylistViewModel()
-	@State private var currentItem = 0
-	
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
 	
@@ -38,12 +36,12 @@ struct PlaylistView: View {
 							
 							ForEach(viewmodel.songs.indices, id: \.self) { i in
 								let song = viewmodel.songs[i]
-								PlaylistItemView(song: song, isHighlighted: i == currentItem)
+								PlaylistItemView(song: song, isHighlighted: i == viewmodel.currentIndex)
 									.padding(.leading, safeAreaInsets.leading)
 									.padding(.trailing, safeAreaInsets.trailing)
 									.onTapGesture {
 										withAnimation {
-											self.currentItem = i
+											self.viewmodel.play(index: i)
 										}
 									}
 									.id(i)
@@ -52,29 +50,28 @@ struct PlaylistView: View {
 						}
 						
 					}
-					.onChange(of: currentItem, perform: { value in
+					.onChange(of: viewmodel.currentIndex, perform: { value in
 						withAnimation(.easeInOut(duration: 0.1)) {
-							proxy.scrollTo(currentItem)
+							proxy.scrollTo(viewmodel.currentIndex)
 						}
-						viewmodel.play(song: viewmodel.songs[value])
 					})
 				}
 				
 				PlayerControlsView(
 					onPlay: {
-						viewmodel.play(song: viewmodel.songs[currentItem])
+						viewmodel.resume()
 					},
 					onPause: {
 						viewmodel.pause()
 					},
 					onNext: {
 						withAnimation {
-							currentItem = min(currentItem + 1, viewmodel.songs.count)
+							viewmodel.playNex()
 						}
 					},
 					onPrevious: {
 						withAnimation {
-							currentItem = max(currentItem - 1, 0)
+							viewmodel.playPrev()
 						}
 					},
 					isPlaying: $viewmodel.isPlaying)
