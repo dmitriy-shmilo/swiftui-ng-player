@@ -14,7 +14,7 @@ class PlaylistViewModel: ObservableObject {
 	@Published var songs = [Song]()
 	@Published var isLoading = false
 	@Published var isPlaying = false
-	@Published var currentIndex: Int = 0
+	@Published var currentIndex: Int = -1
 	
 	var currentSong: Song? {
 		currentIndex < 0 || currentIndex >= songs.count ? nil : songs[currentIndex]

@@ -19,12 +19,15 @@ struct NGPlayerApp: App {
 			print("Failed to set audio session category.")
 		}
 	}
-    var body: some Scene {
-        WindowGroup {
-            PlaylistView()
-				.environmentObject(ImageProvider())
-        }
-    }
+	var body: some Scene {
+		WindowGroup {
+			NavigationView {
+				HomeView()
+			}
+			.navigationViewStyle(StackNavigationViewStyle())
+			.environmentObject(ImageProvider())
+		}
+	}
 }
 
 

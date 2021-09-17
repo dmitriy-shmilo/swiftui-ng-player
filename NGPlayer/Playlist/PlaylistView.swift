@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct PlaylistView: View {
-	@ObservedObject var viewmodel = PlaylistViewModel()
+	
+	let title: String
+	@ObservedObject
+	var viewmodel: PlaylistViewModel
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
-	
-	init(viewmodel: PlaylistViewModel = PlaylistViewModel()) {
-		self.viewmodel = viewmodel
-	}
+	@Environment(\.presentationMode)
+	private var presentationMode
 	
 	var body: some View {
 		
-		ZStack(alignment: .bottom) {
+		ZStack(alignment: .top) {
 			if (viewmodel.isLoading) {
 				VStack(alignment: .center) {
 					Spacer()
@@ -27,12 +28,13 @@ struct PlaylistView: View {
 					Spacer()
 				}
 			}
+			
 			VStack(spacing: 0) {
 				ScrollViewReader { proxy in
 					ScrollView {
 						LazyVStack {
 							Spacer()
-								.frame(height: safeAreaInsets.top)
+								.frame(height: safeAreaInsets.top + 48)
 							
 							ForEach(viewmodel.songs.indices, id: \.self) { i in
 								let song = viewmodel.songs[i]
@@ -78,17 +80,47 @@ struct PlaylistView: View {
 					},
 					isPlaying: $viewmodel.isPlaying)
 			}
+			
+			HStack {
+				Button(action: {
+					presentationMode.wrappedValue.dismiss()
+				}) {
+					Image(systemName: "chevron.left")
+						.foregroundColor(.secondaryButtonForeground)
+						.font(.system(size: 24))
+						.padding()
+				}
+				Spacer()
+				
+				Text(title)
+					.font(.system(size: 32, weight: .thin))
+					.foregroundColor(.primaryFont)
+				
+				Spacer()
+				
+				Image(systemName: "chevron.left")
+					.foregroundColor(.secondaryButtonForeground)
+					.font(.system(size: 24))
+					.padding()
+					.opacity(0)
+			}
+			.frame(height: 48)
+			.padding(.leading, safeAreaInsets.leading)
+			.padding(.trailing, safeAreaInsets.trailing)
+			.padding(.top, safeAreaInsets.top)
+			.background(Color.secondaryBackground.opacity(0.75))
 		}
 		.ignoresSafeArea()
 		.background(Color.background.ignoresSafeArea())
 		.onAppear {
 			viewmodel.load()
 		}
+		.navigationBarHidden(true)
 	}
 }
 
 struct PlaylistView_Previews: PreviewProvider {
 	static var previews: some View {
-		PlaylistView()
+		PlaylistView(title: "Featured", viewmodel: PlaylistViewModel())
 	}
 }
