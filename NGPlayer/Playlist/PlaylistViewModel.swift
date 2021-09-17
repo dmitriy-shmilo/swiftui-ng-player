@@ -94,7 +94,7 @@ class PlaylistViewModel: ObservableObject {
 	
 	// TODO: preload songs
 	func play(index: Int) {
-		guard index >= 0 && index <= songs.count else {
+		guard index >= 0 && index < songs.count else {
 			print("Request to play at an invalid index: \(index)")
 			return
 		}
