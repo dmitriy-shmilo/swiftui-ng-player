@@ -15,7 +15,7 @@ struct NGUrl {
 		URL(string: "\(Root)/audio/\(category.urlComponent)?interval=all&sort=date&genre=\(category.genreId)")!
 	}
 	
-	static func art() -> URL {
-		URL(string: "\(Root)/art/featured?interval=all&sort=date&genre=0&suitabilities=e")!
+	static func art(category: ArtCategory) -> URL {
+		URL(string: "\(Root)/art/\(category.urlComponent)?interval=all&sort=date&genre=0&suitabilities=e")!
 	}
 }

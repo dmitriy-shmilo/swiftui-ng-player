@@ -44,7 +44,7 @@ class PlaylistViewModel: ObservableObject {
 		mutexRequests.removeAll()
 		isLoading = true
 		
-		let url = NGUrlProvider.audioFor(category: category)
+		let url = NGUrl.audioFor(category: category)
 		let request = URLRequest(url: url)
 		
 		URLSession.shared

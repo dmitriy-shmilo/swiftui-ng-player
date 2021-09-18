@@ -29,7 +29,7 @@ class HomeViewModel: ObservableObject {
 			return
 		}
 
-		let url = NGUrl.art()
+		let url = NGUrl.art(category: .featured)
 		let request = URLRequest(url: url)
 		
 		state = .loading
