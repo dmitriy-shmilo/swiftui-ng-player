@@ -39,16 +39,12 @@ class PlaylistViewModel: ObservableObject {
 		NotificationCenter.default.removeObserver(self)
 	}
 	
-	func load() {
+	func load(category: AudioCategory) {
 		mutexRequests.forEach { $0.cancel() }
 		mutexRequests.removeAll()
 		isLoading = true
 		
-		guard let url = URL(string:"https://www.newgrounds.com/audio/featured?type=1") else {
-			// TODO: report errors
-			return
-		}
-		
+		let url = NGUrlProvider.audioFor(category: category)
 		let request = URLRequest(url: url)
 		
 		URLSession.shared

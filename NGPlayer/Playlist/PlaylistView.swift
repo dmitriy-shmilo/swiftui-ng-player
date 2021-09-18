@@ -7,13 +7,16 @@
 
 import SwiftUI
 
-struct PlaylistView: View {
+struct CategoryPlaylistView: View {
 	
-	let title: String
+	let category: AudioCategory
+	
 	@ObservedObject
 	var viewmodel: PlaylistViewModel
+	
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
+	
 	@Environment(\.presentationMode)
 	private var presentationMode
 	
@@ -92,7 +95,7 @@ struct PlaylistView: View {
 				}
 				Spacer()
 				
-				Text(title)
+				Text(category.localizedLabel)
 					.font(.system(size: 32, weight: .thin))
 					.foregroundColor(.primaryFont)
 				
@@ -113,14 +116,14 @@ struct PlaylistView: View {
 		.ignoresSafeArea()
 		.background(Color.background.ignoresSafeArea())
 		.onAppear {
-			viewmodel.load()
+			viewmodel.load(category: category)
 		}
 		.navigationBarHidden(true)
 	}
 }
 
-struct PlaylistView_Previews: PreviewProvider {
+struct CategoryPlaylistView_Previews: PreviewProvider {
 	static var previews: some View {
-		PlaylistView(title: "Featured", viewmodel: PlaylistViewModel())
+		CategoryPlaylistView(category: .featured, viewmodel: PlaylistViewModel())
 	}
 }
