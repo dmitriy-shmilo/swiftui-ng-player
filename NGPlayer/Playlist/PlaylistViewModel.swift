@@ -24,6 +24,7 @@ class PlaylistViewModel: ObservableObject {
 	private var mutexRequests = Set<AnyCancellable>()
 	private var playRequests = Set<AnyCancellable>()
 	private var subs = Set<AnyCancellable>()
+	private var api = NGApi()
 	
 	init() {
 		NotificationCenter.default.addObserver(
@@ -44,35 +45,7 @@ class PlaylistViewModel: ObservableObject {
 		mutexRequests.removeAll()
 		isLoading = true
 		
-		let url = NGUrl.audioFor(category: category)
-		let request = URLRequest(url: url)
-		
-		URLSession.shared
-			.dataTaskPublisher(for: request)
-			.filter { (data, response) in
-				(response as? HTTPURLResponse)?.statusCode == 200
-			}
-			.compactMap { (data, response) in
-				String(data: data, encoding: .utf8)
-			}
-			.tryMap { html -> [Song] in
-				let doc = try SwiftSoup.parse(html)
-				let list = try doc.select(".itemlist.alternating>*")
-				return try list.compactMap { li -> Song? in
-					guard let id = try UInt64(li.attr("data-hub-id")) else {
-						return nil
-					}
-					guard let details = try li.select(".item-details").first() else {
-						return nil
-					}
-					
-					let title = try details.select(".detail-title > h4").text()
-					let author = try details.select(".detail-title > span > strong").text()
-					let image = try URL(string: li.select(".item-icon img").first()?.attr("src") ?? "")
-					
-					return Song(id: id, title: title, author: author, image: image, score: 0, duration: 0)
-				}
-			}
+		api.loadSongsFor(category: category)
 			.receive(on: DispatchQueue.main)
 			.sink(receiveCompletion: { result in
 				switch result {
@@ -96,7 +69,6 @@ class PlaylistViewModel: ObservableObject {
 		}
 		
 		let song = songs[index]
-		let url = URL(string: "https://www.newgrounds.com/audio/load/\(song.id)")!
 		
 		if currentIndex == index {
 			resume()
@@ -104,25 +76,12 @@ class PlaylistViewModel: ObservableObject {
 		} else {
 			currentIndex = index
 		}
-
+		
 		player.replaceCurrentItem(with: nil)
 		playRequests.forEach { $0.cancel() }
 		playRequests.removeAll()
 		
-		var request = URLRequest(url: url)
-		request.setValue("XMLHttpRequest", forHTTPHeaderField: "X-Requested-With")
-		
-		URLSession.shared
-			.dataTaskPublisher(for: request).filter { (data, response) in
-				(response as? HTTPURLResponse)?.statusCode == 200
-			}
-			.map { (data, response) in
-				data
-			}
-			.decode(type: SongStorageInfo.self, decoder: JSONDecoder())
-			.compactMap { ssi in
-				URL(string: ssi.sources.first?.src ?? "")
-			}
+		api.loadSongSourceFor(id: song.id)
 			.receive(on: DispatchQueue.main)
 			.sink(receiveCompletion: { result in
 				switch result {

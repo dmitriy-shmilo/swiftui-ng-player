@@ -14,6 +14,7 @@
 		5D59860026F607470092BC9C /* HomeItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5985FF26F607470092BC9C /* HomeItemView.swift */; };
 		5D621ED426F64D5500573A92 /* NGUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D621ED326F64D5500573A92 /* NGUrl.swift */; };
 		5D621ED726F6614B00573A92 /* ArtCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D621ED626F6614B00573A92 /* ArtCategory.swift */; };
+		5D621ED926F7538D00573A92 /* NGApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D621ED826F7538D00573A92 /* NGApi.swift */; };
 		5DE051D926F4B223005FD7C1 /* NGPlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */; };
 		5DE051DB26F4B223005FD7C1 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE051DA26F4B223005FD7C1 /* PlaylistView.swift */; };
 		5DE051DD26F4B227005FD7C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DE051DC26F4B227005FD7C1 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 		5D5985FF26F607470092BC9C /* HomeItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeItemView.swift; sourceTree = "<group>"; };
 		5D621ED326F64D5500573A92 /* NGUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NGUrl.swift; sourceTree = "<group>"; };
 		5D621ED626F6614B00573A92 /* ArtCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtCategory.swift; sourceTree = "<group>"; };
+		5D621ED826F7538D00573A92 /* NGApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NGApi.swift; sourceTree = "<group>"; };
 		5DE051D526F4B223005FD7C1 /* NGPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NGPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NGPlayerApp.swift; sourceTree = "<group>"; };
 		5DE051DA26F4B223005FD7C1 /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				5D621ED326F64D5500573A92 /* NGUrl.swift */,
+				5D621ED826F7538D00573A92 /* NGApi.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 				5DE051D926F4B223005FD7C1 /* NGPlayerApp.swift in Sources */,
 				5D5985FE26F607190092BC9C /* AudioCategory.swift in Sources */,
 				5D5985FC26F606EE0092BC9C /* Art.swift in Sources */,
+				5D621ED926F7538D00573A92 /* NGApi.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

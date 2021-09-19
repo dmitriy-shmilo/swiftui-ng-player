@@ -23,47 +23,15 @@ class HomeViewModel: ObservableObject {
 	private var artForCategory = [AudioCategory : Art]()
 	private var art = [Art]()
 	private var disposeBag = Set<AnyCancellable>()
+	private var api = NGApi()
 	
 	func load() {
 		guard state != .done && state != .loading else {
 			return
 		}
-
-		let url = NGUrl.art(category: .featured)
-		let request = URLRequest(url: url)
-		
 		state = .loading
 		
-		URLSession.shared
-			.dataTaskPublisher(for: request)
-			.filter { (data, response) in
-				(response as? HTTPURLResponse)?.statusCode == 200
-			}
-			.compactMap { (data, response) in
-				String(data: data, encoding: .utf8)
-			}
-			.tryMap { html -> [Art] in
-				let doc = try SwiftSoup.parse(html)
-				let list = try doc.select(".portalitem-art-icons-medium>*")
-				return try list.compactMap { div -> Art? in
-					guard let id = try UInt64(div.attr("data-hub-id")) else {
-						return nil
-					}
-
-					guard let details = try div.select("a").first() else {
-						return nil
-					}
-					
-					guard let image = try URL(string: details.select(".item-icon img").first()?.attr("src") ?? "") else {
-						return nil
-					}
-					
-					let title = try details.select("h4").text()
-					let author = try details.select("span").text()
-					
-					return Art(id: id, title: title, author: author, image: image)
-				}
-			}
+		api.loadArtFor(category: .featured)
 			.receive(on: DispatchQueue.main)
 			.sink(receiveCompletion: { [weak self] result in
 				switch result {

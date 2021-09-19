@@ -15,6 +15,10 @@ struct NGUrl {
 		URL(string: "\(Root)/audio/\(category.urlComponent)?interval=all&sort=date&genre=\(category.genreId)")!
 	}
 	
+	static func audioLoadFor(id: UInt64) -> URL {
+		return URL(string: "https://www.newgrounds.com/audio/load/\(id)")!
+	}
+	
 	static func art(category: ArtCategory) -> URL {
 		URL(string: "\(Root)/art/\(category.urlComponent)?interval=all&sort=date&genre=0&suitabilities=e")!
 	}
