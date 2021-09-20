@@ -8,57 +8,30 @@
 import SwiftUI
 
 struct HomeView: View {
-	let viewModel = HomeViewModel()
+	
+	@EnvironmentObject
+	var viewModel: HomeViewModel
 	
 	var body: some View {
 		ScrollView {
 			VStack {
-				HStack {
-					Text("quick picks")
-						.font(.title3)
-						.foregroundColor(.secondaryFont)
-					Spacer()
-				}
-				.padding()
+				HomeItemViewCarousel(
+					title: "quick picks",
+					items: [
+						AudioCategory.featured,
+						AudioCategory.latest,
+						AudioCategory.popular
+					]
+				)
 				
-				ScrollView(.horizontal, showsIndicators: false) {
-					HStack {
-						ForEach([
-							AudioCategory.featured,
-							AudioCategory.latest,
-							AudioCategory.popular
-						], id:\.self) { item in
-							NavigationLink(destination: CategoryPlaylistView(category: item, viewmodel: PlaylistViewModel())) {
-								HomeItemView(item: item, viewModel: viewModel)
-							}
-						}
-					}
-					.padding(.horizontal)
-				}
-				
-				HStack {
-					Text("genres")
-						.font(.title3)
-						.foregroundColor(.secondaryFont)
-					Spacer()
-				}
-				.padding()
-				.padding(.top)
-				
-				ScrollView(.horizontal, showsIndicators: false) {
-					HStack {
-						ForEach([
-							AudioCategory.genre(genre: .jazz),
-							AudioCategory.genre(genre: .punk),
-							AudioCategory.genre(genre: .techno)
-						], id:\.self) { item in
-							NavigationLink(destination: CategoryPlaylistView(category: item, viewmodel: PlaylistViewModel())) {
-								HomeItemView(item: item, viewModel: viewModel)
-							}
-						}
-					}
-					.padding(.horizontal)
-				}
+				HomeItemViewCarousel(
+					title: "genres",
+					items: [
+						AudioCategory.genre(genre: .jazz),
+						AudioCategory.genre(genre: .punk),
+						AudioCategory.genre(genre: .techno)
+					]
+				)
 			}
 		}
 		.background(Color.background.ignoresSafeArea())
@@ -72,5 +45,6 @@ struct HomeView: View {
 struct HomeView_Previews: PreviewProvider {
 	static var previews: some View {
 		HomeView()
+			.environmentObject(HomeViewModel())
 	}
 }

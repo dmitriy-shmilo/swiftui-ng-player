@@ -84,34 +84,7 @@ struct CategoryPlaylistView: View {
 					isPlaying: .constant(viewmodel.isPlaying))
 			}
 			
-			HStack {
-				Button(action: {
-					presentationMode.wrappedValue.dismiss()
-				}) {
-					Image(systemName: "chevron.left")
-						.foregroundColor(.secondaryButtonForeground)
-						.font(.system(size: 24))
-						.padding()
-				}
-				Spacer()
-				
-				Text(category.localizedLabel)
-					.font(.system(size: 32, weight: .thin))
-					.foregroundColor(.primaryFont)
-				
-				Spacer()
-				
-				Image(systemName: "chevron.left")
-					.foregroundColor(.secondaryButtonForeground)
-					.font(.system(size: 24))
-					.padding()
-					.opacity(0)
-			}
-			.frame(height: 48)
-			.padding(.leading, safeAreaInsets.leading)
-			.padding(.trailing, safeAreaInsets.trailing)
-			.padding(.top, safeAreaInsets.top)
-			.background(Color.secondaryBackground.opacity(0.75))
+			navBarView
 		}
 		.ignoresSafeArea()
 		.background(Color.background.ignoresSafeArea())
@@ -119,6 +92,37 @@ struct CategoryPlaylistView: View {
 			viewmodel.load(category: category)
 		}
 		.navigationBarHidden(true)
+	}
+	
+	private var navBarView: some View {
+		HStack {
+			Button(action: {
+				presentationMode.wrappedValue.dismiss()
+			}) {
+				Image(systemName: "chevron.left")
+					.foregroundColor(.secondaryButtonForeground)
+					.font(.system(size: 24))
+					.padding()
+			}
+			Spacer()
+			
+			Text(category.localizedLabel)
+				.font(.system(size: 32, weight: .thin))
+				.foregroundColor(.primaryFont)
+			
+			Spacer()
+			
+			Image(systemName: "chevron.left")
+				.foregroundColor(.secondaryButtonForeground)
+				.font(.system(size: 24))
+				.padding()
+				.opacity(0)
+		}
+		.frame(height: 48)
+		.padding(.leading, safeAreaInsets.leading)
+		.padding(.trailing, safeAreaInsets.trailing)
+		.padding(.top, safeAreaInsets.top)
+		.background(Color.secondaryBackground.opacity(0.75))
 	}
 }
 
