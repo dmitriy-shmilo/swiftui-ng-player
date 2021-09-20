@@ -65,10 +65,12 @@ class PlaylistViewModel: ObservableObject {
 	}
 	
 	func load(category: AudioCategory) {
+		
 		songs.removeAll(keepingCapacity: true)
 		currentIndex = -1
+
 		state = .loading(
-			request: api.loadSongsFor(category: category)
+			request: api.loadSongsFor(category: category, offset: 0)
 				.receive(on: DispatchQueue.main)
 				.sink(receiveCompletion: { [weak self] result in
 					switch result {
@@ -80,7 +82,26 @@ class PlaylistViewModel: ObservableObject {
 						break
 					}
 				}, receiveValue: { [weak self] songs in
-					self?.songs = songs
+					self?.songs.append(contentsOf: songs)
+				})
+		)
+	}
+	
+	func loadMore(category: AudioCategory) {
+		state = .loading(
+			request: api.loadSongsFor(category: category, offset: songs.count)
+				.receive(on: DispatchQueue.main)
+				.sink(receiveCompletion: { [weak self] result in
+					switch result {
+					case.failure(let err):
+						self?.state = .error(error: err)
+						print(err)
+					case .finished:
+						self?.state = .idle
+						break
+					}
+				}, receiveValue: { [weak self] songs in
+					self?.songs.append(contentsOf: songs)
 				})
 		)
 	}

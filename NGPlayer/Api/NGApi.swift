@@ -11,8 +11,8 @@ import SwiftSoup
 
 class NGApi {
 
-	func loadSongsFor(category: AudioCategory) -> AnyPublisher<[Song], Error> {
-		let url = NGUrl.audioFor(category: category)
+	func loadSongsFor(category: AudioCategory, offset: Int = 0) -> AnyPublisher<[Song], Error> {
+		let url = NGUrl.audioFor(category: category, offset: offset)
 		let request = URLRequest(url: url)
 		
 		return URLSession.shared
@@ -20,11 +20,12 @@ class NGApi {
 			.filter { (data, response) in
 				(response as? HTTPURLResponse)?.statusCode == 200
 			}
-			.compactMap { (data, response) in
-				String(data: data, encoding: .utf8)
+			.map { (data, response) in
+				data
 			}
-			.tryMap { html -> [Song] in
-				let doc = try SwiftSoup.parse(html)
+			.decode(type: SongRequestResult.self, decoder: JSONDecoder())
+			.tryMap { result -> [Song] in
+				let doc = try SwiftSoup.parseBodyFragment(result.content)
 				let list = try doc.select(".itemlist.alternating>*")
 				return try list.compactMap { li -> Song? in
 					guard let id = try UInt64(li.attr("data-hub-id")) else {
@@ -33,11 +34,11 @@ class NGApi {
 					guard let details = try li.select(".item-details").first() else {
 						return nil
 					}
-					
+
 					let title = try details.select(".detail-title > h4").text()
 					let author = try details.select(".detail-title > span > strong").text()
 					let image = try URL(string: li.select(".item-icon img").first()?.attr("src") ?? "")
-					
+
 					return Song(id: id, title: title, author: author, image: image, score: 0, duration: 0)
 				}
 			}

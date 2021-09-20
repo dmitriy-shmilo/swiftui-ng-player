@@ -11,8 +11,8 @@ struct NGUrl {
 	private static let Root = "https://www.newgrounds.com"
 
 	// TODO: add sort parameter
-	static func audioFor(category: AudioCategory) -> URL {
-		URL(string: "\(Root)/audio/\(category.urlComponent)?interval=all&sort=date&genre=\(category.genreId)")!
+	static func audioFor(category: AudioCategory, offset: Int = 0) -> URL {
+		URL(string: "\(Root)/audio/\(category.urlComponent)?interval=all&sort=date&genre=\(category.genreId)&isAjaxRequest=1&offset=\(offset)")!
 	}
 	
 	static func audioLoadFor(id: UInt64) -> URL {

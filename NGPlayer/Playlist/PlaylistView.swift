@@ -46,14 +46,18 @@ struct CategoryPlaylistView: View {
 									.padding(.trailing, safeAreaInsets.trailing)
 									.onTapGesture {
 										withAnimation {
-											self.viewmodel.play(index: i)
+											viewmodel.play(index: i)
+										}
+									}
+									.onAppear {
+										if i == viewmodel.songs.count - 1 {
+											viewmodel.loadMore(category: category)
 										}
 									}
 									.id(i)
 								Divider()
 									.padding(.horizontal)
 							}
-							
 						}
 						
 					}

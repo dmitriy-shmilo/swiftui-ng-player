@@ -24,3 +24,7 @@ struct SongStorageInfo: Codable {
 	let id: UInt64
 	let sources: [SongSource]
 }
+
+struct SongRequestResult: Codable {
+	let content: String
+}
