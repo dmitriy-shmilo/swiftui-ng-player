@@ -42,54 +42,7 @@ struct CategoryPlaylistView: View {
 			}
 			
 			VStack(spacing: 0) {
-				ScrollViewReader { proxy in
-					ScrollView {
-						// stretchy image thingy
-						// TODO: pass in art ID instead of a thumbnail URL
-						if !viewmodel.isFullLoading, let image = image {
-							GeometryReader { proxy in
-								Image(uiImage: image)
-									.resizable()
-									.scaledToFill()
-									.frame(
-										width: proxy.size.width,
-										height: max(0, coverImageHeight + proxy.frame(in: .global).minY)
-									)
-									.offset(y: -proxy.frame(in: .global).minY)
-							}
-							.frame(height: coverImageHeight)
-						}
-						
-						LazyVStack {
-							ForEach(viewmodel.songs.indices, id: \.self) { i in
-								let song = viewmodel.songs[i]
-								PlaylistItemView(song: song, isHighlighted: i == viewmodel.currentIndex)
-									.padding(.leading, safeAreaInsets.leading)
-									.padding(.trailing, safeAreaInsets.trailing)
-									.onTapGesture {
-										withAnimation {
-											viewmodel.play(index: i)
-										}
-									}
-									.onAppear {
-										if i == viewmodel.songs.count - 1 {
-											viewmodel.loadMore(category: category)
-										}
-									}
-									.id(i)
-								Divider()
-									.padding(.horizontal)
-							}
-						}
-						.background(Color.background)
-						
-					}
-					.onChange(of: viewmodel.currentIndex, perform: { value in
-						withAnimation(.easeInOut(duration: 0.1)) {
-							proxy.scrollTo(viewmodel.currentIndex)
-						}
-					})
-				}
+				songListView
 				
 				PlayerControlsView(
 					onPlay: {
@@ -118,7 +71,7 @@ struct CategoryPlaylistView: View {
 			.onReceive(imageProvider.image(for: imageUrl), perform: { image in
 				self.image = image
 			})
-			
+
 			navBarView
 		}
 		.ignoresSafeArea()
@@ -159,9 +112,64 @@ struct CategoryPlaylistView: View {
 		.padding(.top, safeAreaInsets.top)
 		.background(Color.secondaryBackground.opacity(0.75))
 	}
+	
+	private var songListView: some View {
+		ScrollViewReader { proxy in
+			ScrollView {
+				// TODO: pass in art ID instead of a thumbnail URL
+				if !viewmodel.isFullLoading, let image = image {
+					coverImageView(image: image)
+				}
 
+				LazyVStack {
+					ForEach(viewmodel.songs.indices, id: \.self) { i in
+						let song = viewmodel.songs[i]
+						PlaylistItemView(
+							song: song,
+							isHighlighted: i == viewmodel.currentIndex
+						)
+						.padding(.leading, safeAreaInsets.leading)
+						.padding(.trailing, safeAreaInsets.trailing)
+						.onTapGesture {
+							withAnimation {
+								viewmodel.play(index: i)
+							}
+						}
+						.onAppear {
+							if i == viewmodel.songs.count - 1 {
+								viewmodel.loadMore(category: category)
+							}
+						}
+						.id(i)
+						Divider().padding(.horizontal)
+					}
+				}
+				.background(Color.background)
+			}
+			.onChange(of: viewmodel.currentIndex, perform: { value in
+				withAnimation(.easeInOut(duration: 0.1)) {
+					proxy.scrollTo(viewmodel.currentIndex)
+				}
+			})
+		}
+	}
+	
 	private var coverImageHeight: CGFloat {
 		verticalSizeClass == .compact ? 120 : 300
+	}
+	
+	private func coverImageView(image: UIImage) -> some View {
+		GeometryReader { proxy in
+			Image(uiImage: image)
+				.resizable()
+				.scaledToFill()
+				.frame(
+					width: proxy.size.width,
+					height: max(0, coverImageHeight + proxy.frame(in: .global).minY)
+				)
+				.offset(y: -proxy.frame(in: .global).minY)
+		}
+		.frame(height: coverImageHeight)
 	}
 }
 
