@@ -10,9 +10,13 @@ import SwiftUI
 struct CategoryPlaylistView: View {
 	
 	let category: AudioCategory
+	let imageUrl: URL?
 	
 	@EnvironmentObject
 	private var viewmodel: PlaylistViewModel
+	
+	@EnvironmentObject
+	private var imageProvider: ImageProvider
 	
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
@@ -20,8 +24,10 @@ struct CategoryPlaylistView: View {
 	@Environment(\.presentationMode)
 	private var presentationMode
 	
+	@State
+	private var image: UIImage?
+	
 	var body: some View {
-		
 		ZStack(alignment: .top) {
 			if viewmodel.isFullLoading {
 				VStack(alignment: .center) {
@@ -35,10 +41,23 @@ struct CategoryPlaylistView: View {
 			VStack(spacing: 0) {
 				ScrollViewReader { proxy in
 					ScrollView {
+						// stretchy image thingy
+						// TODO: pass in art ID instead of a thumbnail URL
+						if let image = image {
+							GeometryReader { proxy in
+								Image(uiImage: image)
+									.resizable()
+									.scaledToFill()
+									.frame(
+										width: proxy.size.width,
+										height: max(0, 300 + proxy.frame(in: .global).minY)
+									)
+									.offset(y: -proxy.frame(in: .global).minY)
+							}
+							.frame(height: 300)
+						}
+						
 						LazyVStack {
-							Spacer()
-								.frame(height: safeAreaInsets.top + 48)
-							
 							ForEach(viewmodel.songs.indices, id: \.self) { i in
 								let song = viewmodel.songs[i]
 								PlaylistItemView(song: song, isHighlighted: i == viewmodel.currentIndex)
@@ -59,6 +78,7 @@ struct CategoryPlaylistView: View {
 									.padding(.horizontal)
 							}
 						}
+						.background(Color.background)
 						
 					}
 					.onChange(of: viewmodel.currentIndex, perform: { value in
@@ -92,6 +112,9 @@ struct CategoryPlaylistView: View {
 					},
 					isPlaying: .constant(viewmodel.isPlaying))
 			}
+			.onReceive(imageProvider.image(for: imageUrl), perform: { image in
+				self.image = image
+			})
 			
 			navBarView
 		}
@@ -137,7 +160,7 @@ struct CategoryPlaylistView: View {
 
 struct CategoryPlaylistView_Previews: PreviewProvider {
 	static var previews: some View {
-		CategoryPlaylistView(category: .featured)
+		CategoryPlaylistView(category: .featured, imageUrl: nil)
 			.environmentObject(PlaylistViewModel())
 	}
 }
