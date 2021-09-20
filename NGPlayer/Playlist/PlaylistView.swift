@@ -66,14 +66,19 @@ struct CategoryPlaylistView: View {
 				
 				PlayerControlsView(
 					onPlay: {
-						viewmodel.resume()
+						switch viewmodel.state {
+						case .paused:
+							viewmodel.resume()
+						default:
+							viewmodel.playNext()
+						}
 					},
 					onPause: {
 						viewmodel.pause()
 					},
 					onNext: {
 						withAnimation {
-							viewmodel.playNex()
+							viewmodel.playNext()
 						}
 					},
 					onPrevious: {

@@ -12,10 +12,12 @@ import AVKit
 
 class PlaylistViewModel: ObservableObject {
 	
+	// TODO: separate player and network state
 	enum State {
 		case idle
 		case loading(request: AnyCancellable)
 		case playing
+		case paused
 		case error(error: Error)
 	}
 	
@@ -122,15 +124,20 @@ class PlaylistViewModel: ObservableObject {
 		)
 	}
 	
-	func playNex() {
-		play(index: currentIndex + 1)
+	func playNext() {
+		play(index: currentIndex >= songs.count - 1 ? 0 : currentIndex + 1)
 	}
 	
 	func playPrev() {
-		play(index: currentIndex - 1)
+		play(index: currentIndex <= 0 ? songs.count - 1 : currentIndex - 1)
 	}
 	
 	func resume() {
+		guard case .paused = state else {
+			print("Attempt to resume a non-paused player")
+			return
+		}
+	
 		do {
 			try AVAudioSession.sharedInstance().setActive(true)
 			player.play()
@@ -141,11 +148,21 @@ class PlaylistViewModel: ObservableObject {
 	}
 	
 	func pause() {
-		player.pause()
-		state = .idle
+		guard case .playing = state else {
+			print("Attempt to pause a non-playing player")
+			return
+		}
+		
+		do {
+			try AVAudioSession.sharedInstance().setActive(false)
+			player.pause()
+			state = .paused
+		} catch {
+			print("Failed to deactivate audio session")
+		}
 	}
 	
 	@objc private func onPlayerComplete() {
-		playNex()
+		playNext()
 	}
 }
