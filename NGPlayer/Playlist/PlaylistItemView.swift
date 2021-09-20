@@ -11,9 +11,12 @@ struct PlaylistItemView: View {
 	let song: Song
 	let isHighlighted: Bool
 
-	@State private var image = UIImage(named: "AudioIconDefault")!
-	@EnvironmentObject private var imageProvider: ImageProvider
+	@State
+	private var image = UIImage(named: "AudioIconDefault")!
 	
+	@EnvironmentObject
+	private var imageProvider: ImageProvider
+	 
 	var body: some View {
 		HStack {
 			Image(uiImage: image)
@@ -44,7 +47,7 @@ struct PlaylistItemView: View {
 		}
 		.frame(height: 70)
 		.padding(.horizontal, isHighlighted ? 16 : 32)
-
+		.contentShape(Rectangle())
 	}
 }
 
