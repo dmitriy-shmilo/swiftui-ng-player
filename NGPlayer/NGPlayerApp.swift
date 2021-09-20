@@ -27,6 +27,7 @@ struct NGPlayerApp: App {
 			.navigationViewStyle(StackNavigationViewStyle())
 			.environmentObject(ImageProvider())
 			.environmentObject(HomeViewModel())
+			.environmentObject(PlaylistViewModel())
 		}
 	}
 }

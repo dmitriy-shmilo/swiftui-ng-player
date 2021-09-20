@@ -24,7 +24,7 @@ struct HomeItemViewCarousel: View {
 			ScrollView(.horizontal, showsIndicators: false) {
 				HStack {
 					ForEach(items, id:\.self) { item in
-						NavigationLink(destination: CategoryPlaylistView(category: item, viewmodel: PlaylistViewModel())) {
+						NavigationLink(destination: CategoryPlaylistView(category: item)) {
 							HomeItemView(item: item)
 						}
 					}

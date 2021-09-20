@@ -11,8 +11,8 @@ struct CategoryPlaylistView: View {
 	
 	let category: AudioCategory
 	
-	@ObservedObject
-	var viewmodel: PlaylistViewModel
+	@EnvironmentObject
+	private var viewmodel: PlaylistViewModel
 	
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
@@ -133,6 +133,7 @@ struct CategoryPlaylistView: View {
 
 struct CategoryPlaylistView_Previews: PreviewProvider {
 	static var previews: some View {
-		CategoryPlaylistView(category: .featured, viewmodel: PlaylistViewModel())
+		CategoryPlaylistView(category: .featured)
+			.environmentObject(PlaylistViewModel())
 	}
 }

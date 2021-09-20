@@ -65,6 +65,8 @@ class PlaylistViewModel: ObservableObject {
 	}
 	
 	func load(category: AudioCategory) {
+		songs.removeAll(keepingCapacity: true)
+		currentIndex = -1
 		state = .loading(
 			request: api.loadSongsFor(category: category)
 				.receive(on: DispatchQueue.main)
