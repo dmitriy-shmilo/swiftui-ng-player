@@ -24,6 +24,9 @@ struct CategoryPlaylistView: View {
 	@Environment(\.presentationMode)
 	private var presentationMode
 	
+	@Environment(\.verticalSizeClass)
+	private var verticalSizeClass
+	
 	@State
 	private var image: UIImage?
 	
@@ -43,18 +46,18 @@ struct CategoryPlaylistView: View {
 					ScrollView {
 						// stretchy image thingy
 						// TODO: pass in art ID instead of a thumbnail URL
-						if let image = image {
+						if !viewmodel.isFullLoading, let image = image {
 							GeometryReader { proxy in
 								Image(uiImage: image)
 									.resizable()
 									.scaledToFill()
 									.frame(
 										width: proxy.size.width,
-										height: max(0, 300 + proxy.frame(in: .global).minY)
+										height: max(0, coverImageHeight + proxy.frame(in: .global).minY)
 									)
 									.offset(y: -proxy.frame(in: .global).minY)
 							}
-							.frame(height: 300)
+							.frame(height: coverImageHeight)
 						}
 						
 						LazyVStack {
@@ -155,6 +158,10 @@ struct CategoryPlaylistView: View {
 		.padding(.trailing, safeAreaInsets.trailing)
 		.padding(.top, safeAreaInsets.top)
 		.background(Color.secondaryBackground.opacity(0.75))
+	}
+
+	private var coverImageHeight: CGFloat {
+		verticalSizeClass == .compact ? 120 : 300
 	}
 }
 
