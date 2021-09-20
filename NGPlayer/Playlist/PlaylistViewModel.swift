@@ -11,19 +11,41 @@ import Combine
 import AVKit
 
 class PlaylistViewModel: ObservableObject {
+	
+	enum State {
+		case idle
+		case loading(request: AnyCancellable)
+		case playing
+		case error(error: Error)
+	}
+	
+	@Published var state = State.idle
 	@Published var songs = [Song]()
-	@Published var isLoading = false
-	@Published var isPlaying = false
 	@Published var currentIndex: Int = -1
 	
 	var currentSong: Song? {
 		currentIndex < 0 || currentIndex >= songs.count ? nil : songs[currentIndex]
 	}
 	
+	var isPlaying: Bool {
+		switch state {
+		case .playing:
+			return true
+		default:
+			return false
+		}
+	}
+	
+	var isFullLoading: Bool {
+		switch state {
+		case .loading(request: _):
+			return songs.count == 0
+		default:
+			return false
+		}
+	}
+	
 	private var player = AVPlayer()
-	private var mutexRequests = Set<AnyCancellable>()
-	private var playRequests = Set<AnyCancellable>()
-	private var subs = Set<AnyCancellable>()
 	private var api = NGApi()
 	
 	init() {
@@ -41,24 +63,22 @@ class PlaylistViewModel: ObservableObject {
 	}
 	
 	func load(category: AudioCategory) {
-		mutexRequests.forEach { $0.cancel() }
-		mutexRequests.removeAll()
-		isLoading = true
-		
-		api.loadSongsFor(category: category)
-			.receive(on: DispatchQueue.main)
-			.sink(receiveCompletion: { result in
-				switch result {
-				case.failure(let err):
-					print(err)
-				default:
-					break
-				}
-			}, receiveValue: { [weak self] songs in
-				self?.isLoading = false
-				self?.songs = songs
-			})
-			.store(in: &mutexRequests)
+		state = .loading(
+			request: api.loadSongsFor(category: category)
+				.receive(on: DispatchQueue.main)
+				.sink(receiveCompletion: { [weak self] result in
+					switch result {
+					case.failure(let err):
+						self?.state = .error(error: err)
+						print(err)
+					case .finished:
+						self?.state = .idle
+						break
+					}
+				}, receiveValue: { [weak self] songs in
+					self?.songs = songs
+				})
+		)
 	}
 	
 	// TODO: preload songs
@@ -78,30 +98,28 @@ class PlaylistViewModel: ObservableObject {
 		}
 		
 		player.replaceCurrentItem(with: nil)
-		playRequests.forEach { $0.cancel() }
-		playRequests.removeAll()
-		
-		api.loadSongSourceFor(id: song.id)
-			.receive(on: DispatchQueue.main)
-			.sink(receiveCompletion: { result in
-				switch result {
-				case .failure(let err):
-					print(err)
-				default:
-					break
-				}
-			}, receiveValue: { [weak self] src in
-				do {
-					try AVAudioSession.sharedInstance().setActive(true)
-					let item = AVPlayerItem(url: src)
-					self?.player.replaceCurrentItem(with: item)
-					self?.player.play()
-					self?.isPlaying = true
-				} catch {
-					print("Failed to activate audio session")
-				}
-			})
-			.store(in: &playRequests)
+		state = .loading(
+			request: api.loadSongSourceFor(id: song.id)
+				.receive(on: DispatchQueue.main)
+				.sink(receiveCompletion: { result in
+					switch result {
+					case .failure(let err):
+						print(err)
+					default:
+						break
+					}
+				}, receiveValue: { [weak self] src in
+					do {
+						try AVAudioSession.sharedInstance().setActive(true)
+						let item = AVPlayerItem(url: src)
+						self?.player.replaceCurrentItem(with: item)
+						self?.player.play()
+						self?.state = .playing
+					} catch {
+						print("Failed to activate audio session")
+					}
+				})
+		)
 	}
 	
 	func playNex() {
@@ -116,7 +134,7 @@ class PlaylistViewModel: ObservableObject {
 		do {
 			try AVAudioSession.sharedInstance().setActive(true)
 			player.play()
-			isPlaying = true
+			state = .playing
 		} catch {
 			print("Failed to activate audio session")
 		}
@@ -124,7 +142,7 @@ class PlaylistViewModel: ObservableObject {
 	
 	func pause() {
 		player.pause()
-		isPlaying = false
+		state = .idle
 	}
 	
 	@objc private func onPlayerComplete() {

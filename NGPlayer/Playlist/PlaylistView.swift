@@ -23,7 +23,7 @@ struct CategoryPlaylistView: View {
 	var body: some View {
 		
 		ZStack(alignment: .top) {
-			if (viewmodel.isLoading) {
+			if viewmodel.isFullLoading {
 				VStack(alignment: .center) {
 					Spacer()
 					ProgressView()
@@ -81,7 +81,7 @@ struct CategoryPlaylistView: View {
 							viewmodel.playPrev()
 						}
 					},
-					isPlaying: $viewmodel.isPlaying)
+					isPlaying: .constant(viewmodel.isPlaying))
 			}
 			
 			HStack {
