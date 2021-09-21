@@ -42,6 +42,7 @@ class NGApi {
 					return Song(id: id, title: title, author: author, image: image, score: 0, duration: 0)
 				}
 			}
+			.subscribe(on: DispatchQueue.global(qos: .userInitiated))
 			.eraseToAnyPublisher()
 	}
 	
@@ -61,6 +62,7 @@ class NGApi {
 			.compactMap { ssi in
 				URL(string: ssi.sources.first?.src ?? "")
 			}
+			.subscribe(on: DispatchQueue.global(qos: .userInitiated))
 			.eraseToAnyPublisher()
 	}
 	
@@ -98,6 +100,7 @@ class NGApi {
 					return Art(id: id, title: title, author: author, image: image)
 				}
 			}
+			.subscribe(on: DispatchQueue.global(qos: .userInitiated))
 			.eraseToAnyPublisher()
 	}
 }
