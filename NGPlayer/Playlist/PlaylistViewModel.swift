@@ -146,7 +146,9 @@ class PlaylistViewModel: ObservableObject {
 						self?.player.replaceCurrentItem(with: item)
 						self?.player.play()
 						self?.state = .playing
-						self?.setupNowPlaying(song: song)
+						DispatchQueue.global(qos: .userInitiated).async {
+							self?.setupNowPlaying(song: song)
+						}
 					} catch {
 						print("Failed to activate audio session")
 					}
