@@ -25,13 +25,20 @@ struct NGPlayerApp: App {
 			print("Failed to set audio session category.")
 		}
 	}
-
+	
 	var body: some Scene {
 		WindowGroup {
-			NavigationView {
-				HomeView()
+			ZStack(alignment:.bottom) {
+				NavigationView {
+					HomeView()
+				}
+				.navigationViewStyle(StackNavigationViewStyle())
+				
+				if currentPlaylist.hasSongs {
+					PlayerControlsView()
+				}
 			}
-			.navigationViewStyle(StackNavigationViewStyle())
+			.ignoresSafeArea()
 			.environmentObject(imageProvider)
 			.environmentObject(currentPlaylist)
 		}

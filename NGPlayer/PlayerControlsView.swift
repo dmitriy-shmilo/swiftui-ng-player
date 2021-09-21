@@ -8,17 +8,13 @@
 import SwiftUI
 
 struct PlayerControlsView: View {
-	let onPlay: () -> Void
-	let onPause: () -> Void
-	let onNext: () -> Void
-	let onPrevious: () -> Void
 	
-	@Binding
-	var isPlaying: Bool
+	@EnvironmentObject
+	private var playlistViewModel: PlaylistViewModel
 	
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
-
+	
 	@Environment(\.verticalSizeClass)
 	private var verticalSizeClass
 	
@@ -28,7 +24,9 @@ struct PlayerControlsView: View {
 			Divider()
 			
 			HStack(spacing: 0) {
-				Button(action: onPrevious) {
+				Button(action: {
+					let _ = playlistViewModel.playPrev()
+				}) {
 					Image(systemName: "backward.end")
 						.foregroundColor(Color.secondaryButtonForeground)
 				}
@@ -37,19 +35,24 @@ struct PlayerControlsView: View {
 				Spacer()
 				
 				Button(action: {
-					if isPlaying {
-						onPause()
-					} else {
-						onPlay()
+					switch playlistViewModel.state {
+					case .playing:
+						playlistViewModel.pause()
+					case .paused:
+						let _ = playlistViewModel.resume()
+					default:
+						let _ = playlistViewModel.playNext()
 					}
 				}) {
-					Image(systemName: isPlaying ? "pause" : "play")
+					Image(systemName: playlistViewModel.isPlaying ? "pause" : "play")
 						.foregroundColor(Color.primaryButtonForeground)
 						.font(.system(size: verticalSizeClass == .compact ? 28 : 44, weight: .thin))
 				}
 				
 				Spacer()
-				Button(action: onNext) {
+				Button(action: {
+					let _ = playlistViewModel.playNext()
+				}) {
 					Image(systemName: "forward.end")
 						.foregroundColor(Color.secondaryButtonForeground)
 				}
@@ -66,6 +69,6 @@ struct PlayerControlsView: View {
 
 struct PlayerControlsView_Previews: PreviewProvider {
 	static var previews: some View {
-		PlayerControlsView(onPlay: {}, onPause: {}, onNext: {}, onPrevious: {}, isPlaying: .constant(false))
+		PlayerControlsView()
 	}
 }

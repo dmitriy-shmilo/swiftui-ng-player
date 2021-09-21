@@ -8,34 +8,45 @@
 import SwiftUI
 
 struct HomeView: View {
-
+	
 	@StateObject
 	private var viewModel = HomeViewModel()
 	
+	@Environment(\.safeAreaInsets)
+	private var safeAreaInsets
+	
 	var body: some View {
-		ScrollView {
-			VStack {
-				HomeItemViewCarousel(
-					title: "quick picks",
-					items: [
-						AudioCategory.featured,
-						AudioCategory.latest,
-						AudioCategory.popular
-					]
-				)
-				
-				HomeItemViewCarousel(
-					title: "genres",
-					items: [
-						AudioCategory.genre(genre: .jazz),
-						AudioCategory.genre(genre: .punk),
-						AudioCategory.genre(genre: .techno)
-					]
-				)
+		VStack {
+			ScrollView {
+				VStack {
+					Spacer()
+						.frame(height: safeAreaInsets.top)
+
+					HomeItemViewCarousel(
+						title: "quick picks",
+						items: [
+							AudioCategory.featured,
+							AudioCategory.latest,
+							AudioCategory.popular
+						]
+					)
+					
+					HomeItemViewCarousel(
+						title: "genres",
+						items: [
+							AudioCategory.genre(genre: .jazz),
+							AudioCategory.genre(genre: .punk),
+							AudioCategory.genre(genre: .techno)
+						]
+					)
+				}
+				.padding(.leading, safeAreaInsets.leading)
+				.padding(.trailing, safeAreaInsets.trailing)
 			}
 		}
+		.ignoresSafeArea()
 		.background(Color.background.ignoresSafeArea())
-		.navigationTitle("NGPlayer")
+		.navigationBarHidden(true)
 		.onAppear {
 			viewModel.load()
 		}

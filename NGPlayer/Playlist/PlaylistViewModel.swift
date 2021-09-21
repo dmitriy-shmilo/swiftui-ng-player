@@ -48,6 +48,10 @@ class PlaylistViewModel: ObservableObject {
 		}
 	}
 	
+	var hasSongs: Bool {
+		songs.count > 0
+	}
+	
 	private var player = AVPlayer()
 	private var api = NGApi()
 	private var commandCenterPlayTarget: Any?

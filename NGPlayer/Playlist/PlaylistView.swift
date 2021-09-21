@@ -39,38 +39,9 @@ struct CategoryPlaylistView: View {
 						.progressViewStyle(CircularProgressViewStyle(tint: Color.accentColor))
 					Spacer()
 				}
-			}
-			
-			VStack(spacing: 0) {
+			} else {
 				songListView
-				
-				PlayerControlsView(
-					onPlay: {
-						switch viewmodel.state {
-						case .paused:
-							let _ = viewmodel.resume()
-						default:
-							let _ = viewmodel.playNext()
-						}
-					},
-					onPause: {
-						viewmodel.pause()
-					},
-					onNext: {
-						withAnimation {
-							let _ = viewmodel.playNext()
-						}
-					},
-					onPrevious: {
-						withAnimation {
-							let _ = viewmodel.playPrev()
-						}
-					},
-					isPlaying: .constant(viewmodel.isPlaying))
 			}
-			.onReceive(imageProvider.image(for: imageUrl), perform: { image in
-				self.image = image
-			})
 
 			navBarView
 		}
@@ -79,6 +50,9 @@ struct CategoryPlaylistView: View {
 		.onAppear {
 			viewmodel.load(category: category)
 		}
+		.onReceive(imageProvider.image(for: imageUrl), perform: { image in
+			self.image = image
+		})
 		.navigationBarHidden(true)
 	}
 	
@@ -143,6 +117,10 @@ struct CategoryPlaylistView: View {
 						.id(i)
 						Divider().padding(.horizontal)
 					}
+					
+					// TODO: pass current player height
+					Spacer()
+						.frame(height: 200)
 				}
 				.background(Color.background)
 			}
