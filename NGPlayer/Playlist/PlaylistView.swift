@@ -48,9 +48,9 @@ struct CategoryPlaylistView: View {
 					onPlay: {
 						switch viewmodel.state {
 						case .paused:
-							viewmodel.resume()
+							let _ = viewmodel.resume()
 						default:
-							viewmodel.playNext()
+							let _ = viewmodel.playNext()
 						}
 					},
 					onPause: {
@@ -58,12 +58,12 @@ struct CategoryPlaylistView: View {
 					},
 					onNext: {
 						withAnimation {
-							viewmodel.playNext()
+							let _ = viewmodel.playNext()
 						}
 					},
 					onPrevious: {
 						withAnimation {
-							viewmodel.playPrev()
+							let _ = viewmodel.playPrev()
 						}
 					},
 					isPlaying: .constant(viewmodel.isPlaying))
@@ -132,7 +132,7 @@ struct CategoryPlaylistView: View {
 						.padding(.trailing, safeAreaInsets.trailing)
 						.onTapGesture {
 							withAnimation {
-								viewmodel.play(index: i)
+								let _ = viewmodel.play(index: i)
 							}
 						}
 						.onAppear {

@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftSoup
 import Combine
 import AVKit
+import MediaPlayer
 
 class PlaylistViewModel: ObservableObject {
 	
@@ -49,6 +50,9 @@ class PlaylistViewModel: ObservableObject {
 	
 	private var player = AVPlayer()
 	private var api = NGApi()
+	private var commandCenterPlayTarget: Any?
+	private var commandCenterPauseTarget: Any?
+	private var commandCenterPlayNextTarget: Any?
 	
 	init() {
 		NotificationCenter.default.addObserver(
@@ -57,18 +61,20 @@ class PlaylistViewModel: ObservableObject {
 			name: .AVPlayerItemDidPlayToEndTime,
 			object: player.currentItem
 		)
+		setupRemoteCommandCenter()
 		player.rate = 3.0
 	}
 	
 	deinit {
 		NotificationCenter.default.removeObserver(self)
+		teardownRemoteCommandCenter()
 	}
 	
 	func load(category: AudioCategory) {
 		
 		songs.removeAll(keepingCapacity: true)
 		currentIndex = -1
-
+		
 		state = .loading(
 			request: api.loadSongsFor(category: category, offset: 0)
 				.receive(on: DispatchQueue.main)
@@ -107,17 +113,17 @@ class PlaylistViewModel: ObservableObject {
 	}
 	
 	// TODO: preload songs
-	func play(index: Int) {
+	func play(index: Int) -> Bool {
 		guard index >= 0 && index < songs.count else {
 			print("Request to play at an invalid index: \(index)")
-			return
+			return false
 		}
 		
 		let song = songs[index]
 		
 		if currentIndex == index {
 			resume()
-			return
+			return true
 		} else {
 			currentIndex = index
 		}
@@ -140,19 +146,22 @@ class PlaylistViewModel: ObservableObject {
 						self?.player.replaceCurrentItem(with: item)
 						self?.player.play()
 						self?.state = .playing
+						self?.setupNowPlaying(song: song)
 					} catch {
 						print("Failed to activate audio session")
 					}
 				})
 		)
+		
+		return true
 	}
 	
-	func playNext() {
-		play(index: currentIndex >= songs.count - 1 ? 0 : currentIndex + 1)
+	func playNext() -> Bool {
+		return play(index: currentIndex >= songs.count - 1 ? 0 : currentIndex + 1)
 	}
 	
-	func playPrev() {
-		play(index: currentIndex <= 0 ? songs.count - 1 : currentIndex - 1)
+	func playPrev() -> Bool {
+		return play(index: currentIndex <= 0 ? songs.count - 1 : currentIndex - 1)
 	}
 	
 	func resume() {
@@ -160,7 +169,7 @@ class PlaylistViewModel: ObservableObject {
 			print("Attempt to resume a non-paused player")
 			return
 		}
-	
+		
 		do {
 			try AVAudioSession.sharedInstance().setActive(true)
 			player.play()
@@ -186,6 +195,55 @@ class PlaylistViewModel: ObservableObject {
 	}
 	
 	@objc private func onPlayerComplete() {
-		playNext()
+		let _ = playNext()
+	}
+	
+	private func setupNowPlaying(song: Song) {
+		var nowPlayingInfo = [String : Any]()
+		nowPlayingInfo[MPMediaItemPropertyTitle] = song.title
+
+		// TODO: grab song artwork from an image provider
+		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentItem?.currentTime().seconds
+		nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = player.currentItem?.asset.duration.seconds
+		nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+
+
+		// Set the metadata
+		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+	}
+	
+	private func setupRemoteCommandCenter() {
+		let commandCenter = MPRemoteCommandCenter.shared()
+		commandCenterPlayNextTarget = commandCenter.nextTrackCommand.addTarget { [unowned self] event in
+			if self.playNext() {
+				return .success
+			}
+			
+			return .commandFailed
+		}
+		
+		commandCenterPlayTarget = commandCenter.playCommand.addTarget { [unowned self] event in
+			if self.player.rate == 0.0
+				&& self.play(index: self.currentIndex) {
+				return .success
+			}
+			return .commandFailed
+		}
+		
+		commandCenterPauseTarget = commandCenter.pauseCommand.addTarget { [unowned self] event in
+			if self.player.rate == 1.0 {
+				self.pause()
+				return .success
+			}
+			return .commandFailed
+		}
+		
+	}
+	
+	private func teardownRemoteCommandCenter() {
+		let commandCenter = MPRemoteCommandCenter.shared()
+		commandCenter.nextTrackCommand.removeTarget(commandCenterPlayNextTarget)
+		commandCenter.playCommand.removeTarget(commandCenterPlayTarget)
+		commandCenter.pauseCommand.removeTarget(commandCenterPauseTarget)
 	}
 }
