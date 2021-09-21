@@ -63,7 +63,10 @@ struct PlayerControlsView: View {
 			.padding(.bottom, safeAreaInsets.bottom)
 			.padding(.horizontal, max(safeAreaInsets.leading, safeAreaInsets.trailing))
 		}
-		.background(Color.secondaryBackground)
+		.background(GeometryReader { proxy in
+			Color.secondaryBackground
+				.reportCurrentPlayerHeight(proxy.frame(in: .global).height)
+		})
 	}
 }
 

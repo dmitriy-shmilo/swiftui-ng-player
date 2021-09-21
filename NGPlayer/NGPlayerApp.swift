@@ -10,13 +10,7 @@ import AVKit
 
 @main
 struct NGPlayerApp: App {
-	
-	@StateObject
-	private var currentPlaylist = PlaylistViewModel()
-	
-	@StateObject
-	private var imageProvider = ImageProvider()
-	
+
 	init() {
 		let audioSession = AVAudioSession.sharedInstance()
 		do {
@@ -28,19 +22,7 @@ struct NGPlayerApp: App {
 	
 	var body: some Scene {
 		WindowGroup {
-			ZStack(alignment:.bottom) {
-				NavigationView {
-					HomeView()
-				}
-				.navigationViewStyle(StackNavigationViewStyle())
-				
-				if currentPlaylist.hasSongs {
-					PlayerControlsView()
-				}
-			}
-			.ignoresSafeArea()
-			.environmentObject(imageProvider)
-			.environmentObject(currentPlaylist)
+			RootView()
 		}
 	}
 }
@@ -58,23 +40,5 @@ extension UIApplication {
 			.first {
 				$0.isKeyWindow
 			}
-	}
-}
-
-private struct SafeAreaInsetsKey: EnvironmentKey {
-	static var defaultValue: EdgeInsets {
-		UIApplication.shared.keyWindow?.safeAreaInsets.swiftUiInsets ?? EdgeInsets()
-	}
-}
-
-extension EnvironmentValues {
-	var safeAreaInsets: EdgeInsets {
-		self[SafeAreaInsetsKey.self]
-	}
-}
-
-private extension UIEdgeInsets {
-	var swiftUiInsets: EdgeInsets {
-		EdgeInsets(top: top, leading: left, bottom: bottom, trailing: right)
 	}
 }

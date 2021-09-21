@@ -27,6 +27,9 @@ struct CategoryPlaylistView: View {
 	@Environment(\.verticalSizeClass)
 	private var verticalSizeClass
 	
+	@Environment(\.currentPlayerHeight)
+	private var currentPlayerHeight
+	
 	@State
 	private var image: UIImage?
 	
@@ -117,10 +120,9 @@ struct CategoryPlaylistView: View {
 						.id(i)
 						Divider().padding(.horizontal)
 					}
-					
-					// TODO: pass current player height
+
 					Spacer()
-						.frame(height: 200)
+						.frame(height: currentPlayerHeight)
 				}
 				.background(Color.background)
 			}

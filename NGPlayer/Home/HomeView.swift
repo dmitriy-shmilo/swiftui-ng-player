@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct HomeView: View {
-	
+
 	@StateObject
 	private var viewModel = HomeViewModel()
 	
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
+	
+	@Environment(\.currentPlayerHeight)
+	private var currentPlayerHeight
 	
 	var body: some View {
 		VStack {
@@ -39,6 +42,9 @@ struct HomeView: View {
 							AudioCategory.genre(genre: .techno)
 						]
 					)
+					
+					Spacer()
+						.frame(height: currentPlayerHeight)
 				}
 				.padding(.leading, safeAreaInsets.leading)
 				.padding(.trailing, safeAreaInsets.trailing)
