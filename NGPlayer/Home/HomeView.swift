@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct HomeView: View {
-	
-	@EnvironmentObject
-	var viewModel: HomeViewModel
+
+	@StateObject
+	private var viewModel = HomeViewModel()
 	
 	var body: some View {
 		ScrollView {
@@ -39,6 +39,7 @@ struct HomeView: View {
 		.onAppear {
 			viewModel.load()
 		}
+		.environmentObject(viewModel)
 	}
 }
 

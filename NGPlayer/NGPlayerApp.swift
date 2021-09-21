@@ -11,6 +11,12 @@ import AVKit
 @main
 struct NGPlayerApp: App {
 	
+	@StateObject
+	private var currentPlaylist = PlaylistViewModel()
+	
+	@StateObject
+	private var imageProvider = ImageProvider()
+	
 	init() {
 		let audioSession = AVAudioSession.sharedInstance()
 		do {
@@ -19,15 +25,15 @@ struct NGPlayerApp: App {
 			print("Failed to set audio session category.")
 		}
 	}
+
 	var body: some Scene {
 		WindowGroup {
 			NavigationView {
 				HomeView()
 			}
 			.navigationViewStyle(StackNavigationViewStyle())
-			.environmentObject(ImageProvider())
-			.environmentObject(HomeViewModel())
-			.environmentObject(PlaylistViewModel())
+			.environmentObject(imageProvider)
+			.environmentObject(currentPlaylist)
 		}
 	}
 }
