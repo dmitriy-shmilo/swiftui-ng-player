@@ -186,9 +186,9 @@ class PlaylistViewModel: ObservableObject {
 		}
 		
 		do {
-			try AVAudioSession.sharedInstance().setActive(false)
 			player.pause()
 			state = .paused
+			try AVAudioSession.sharedInstance().setActive(false)
 		} catch {
 			print("Failed to deactivate audio session")
 		}
