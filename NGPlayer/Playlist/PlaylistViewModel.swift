@@ -169,23 +169,20 @@ class PlaylistViewModel: ObservableObject {
 						break
 					}
 				}, receiveValue: { [weak self] src in
-					do {
-						try AVAudioSession.sharedInstance().setActive(true)
-						let item = AVPlayerItem(url: src)
-						
 						if let self = self {
-							self.player.replaceCurrentItem(with: item)
-							self.player.play()
 							self.state = .playing
-							
-							
 							DispatchQueue.global(qos: .userInitiated).async {
 								self.setupNowPlaying(song: song)
+								do {
+									let item = AVPlayerItem(url: src)
+									self.player.replaceCurrentItem(with: item)
+									self.player.play()
+									try AVAudioSession.sharedInstance().setActive(true)
+								} catch {
+									print("Failed to activate audio session")
+								}
 							}
 						}
-					} catch {
-						print("Failed to activate audio session")
-					}
 				})
 		)
 		

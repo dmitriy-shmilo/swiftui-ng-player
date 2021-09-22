@@ -55,6 +55,7 @@ class NGApi {
 			.dataTaskPublisher(for: request).filter { (data, response) in
 				(response as? HTTPURLResponse)?.statusCode == 200
 			}
+			.throttle(for: 0.5, scheduler: DispatchQueue.global(qos: .userInitiated), latest: true)
 			.map { (data, response) in
 				data
 			}
