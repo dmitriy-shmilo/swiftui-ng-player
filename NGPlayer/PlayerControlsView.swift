@@ -23,6 +23,17 @@ struct PlayerControlsView: View {
 		VStack(spacing: 0) {
 			Divider()
 			
+			HStack {
+				Text(formatTime(playlistViewModel.currentTime))
+				Spacer()
+				Text(formatTime(playlistViewModel.currentDuration))
+			}
+			.foregroundColor(.secondaryFont)
+			.padding(.horizontal)
+			.padding(.leading, safeAreaInsets.leading)
+			.padding(.trailing, safeAreaInsets.trailing)
+			.padding(.top)
+			
 			HStack(spacing: 0) {
 				Button(action: {
 					let _ = playlistViewModel.playPrev()
@@ -67,6 +78,14 @@ struct PlayerControlsView: View {
 			Color.secondaryBackground
 				.reportCurrentPlayerHeight(proxy.frame(in: .global).height)
 		})
+	}
+	
+	private func formatTime(_ interval: TimeInterval) -> String {
+		let formatter = DateComponentsFormatter()
+		formatter.allowedUnits = [.minute, .second]
+		formatter.unitsStyle = .positional
+		formatter.zeroFormattingBehavior = .pad
+		return formatter.string(from: interval) ?? "00:00"
 	}
 }
 

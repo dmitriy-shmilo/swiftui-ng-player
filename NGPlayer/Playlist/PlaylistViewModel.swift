@@ -25,6 +25,8 @@ class PlaylistViewModel: ObservableObject {
 	@Published var state = State.idle
 	@Published var songs = [Song]()
 	@Published var currentIndex: Int = -1
+	@Published var currentDuration: TimeInterval = 0
+	@Published var currentTime: TimeInterval = 0
 	
 	var currentSong: Song? {
 		currentIndex < 0 || currentIndex >= songs.count ? nil : songs[currentIndex]
@@ -57,6 +59,7 @@ class PlaylistViewModel: ObservableObject {
 	private var commandCenterPlayTarget: Any?
 	private var commandCenterPauseTarget: Any?
 	private var commandCenterPlayNextTarget: Any?
+	private var playerTimeObserver: Any?
 	
 	init() {
 		NotificationCenter.default.addObserver(
@@ -66,12 +69,34 @@ class PlaylistViewModel: ObservableObject {
 			object: player.currentItem
 		)
 		setupRemoteCommandCenter()
-		player.rate = 3.0
+		playerTimeObserver = player.addPeriodicTimeObserver(
+			forInterval: CMTimeMakeWithSeconds(1.0, preferredTimescale: 1),
+			queue: DispatchQueue.main
+		) { [weak self] time in
+			if let self = self, let item = self.player.currentItem {
+				let currentTime = CMTimeGetSeconds(item.currentTime())
+				if currentTime.isFinite && !currentTime.isNaN {
+					self.currentTime = currentTime
+				} else {
+					self.currentTime = 0
+				}
+				
+				let currentDuration = CMTimeGetSeconds(item.duration)
+				if currentDuration.isFinite && !currentDuration.isNaN {
+					self.currentDuration = currentDuration
+				} else {
+					self.currentDuration = 0
+				}
+			}
+		}
 	}
 	
 	deinit {
 		NotificationCenter.default.removeObserver(self)
 		teardownRemoteCommandCenter()
+		if let playerTimeObserver = playerTimeObserver {
+			player.removeTimeObserver(playerTimeObserver)
+		}
 	}
 	
 	func load(category: AudioCategory) {
@@ -147,11 +172,16 @@ class PlaylistViewModel: ObservableObject {
 					do {
 						try AVAudioSession.sharedInstance().setActive(true)
 						let item = AVPlayerItem(url: src)
-						self?.player.replaceCurrentItem(with: item)
-						self?.player.play()
-						self?.state = .playing
-						DispatchQueue.global(qos: .userInitiated).async {
-							self?.setupNowPlaying(song: song)
+						
+						if let self = self {
+							self.player.replaceCurrentItem(with: item)
+							self.player.play()
+							self.state = .playing
+							
+							
+							DispatchQueue.global(qos: .userInitiated).async {
+								self.setupNowPlaying(song: song)
+							}
 						}
 					} catch {
 						print("Failed to activate audio session")
@@ -207,13 +237,13 @@ class PlaylistViewModel: ObservableObject {
 	private func setupNowPlaying(song: Song) {
 		var nowPlayingInfo = [String : Any]()
 		nowPlayingInfo[MPMediaItemPropertyTitle] = song.title
-
+		
 		// TODO: grab song artwork from an image provider
 		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentItem?.currentTime().seconds
 		nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = player.currentItem?.asset.duration.seconds
 		nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
-
-
+		
+		
 		// Set the metadata
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 	}
