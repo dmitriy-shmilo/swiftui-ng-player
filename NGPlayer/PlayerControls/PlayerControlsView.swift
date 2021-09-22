@@ -10,6 +10,9 @@ import SwiftUI
 struct PlayerControlsView: View {
 	
 	@EnvironmentObject
+	private var imageProvider: ImageProvider
+	
+	@EnvironmentObject
 	private var playlistViewModel: PlaylistViewModel
 	
 	@Environment(\.safeAreaInsets)
@@ -18,6 +21,9 @@ struct PlayerControlsView: View {
 	@Environment(\.verticalSizeClass)
 	private var verticalSizeClass
 	
+	@State
+	private var image = UIImage(named: "AudioIconDefault")!
+
 	var body: some View {
 		
 		VStack(spacing: 0) {
@@ -26,26 +32,31 @@ struct PlayerControlsView: View {
 				fill: CGFloat(playlistViewModel.currentTime / playlistViewModel.currentDuration)
 			)
 			
-			HStack {
-				Text(formatTime(playlistViewModel.currentTime))
-				Spacer()
-				Text(formatTime(playlistViewModel.currentDuration))
-			}
-			.foregroundColor(.secondaryFont)
-			.padding(.horizontal)
-			.padding(.leading, safeAreaInsets.leading)
-			.padding(.trailing, safeAreaInsets.trailing)
-			.padding(.top)
-			
-			HStack(spacing: 0) {
-				Button(action: {
-					let _ = playlistViewModel.playPrev()
-				}) {
-					Image(systemName: "backward.end")
-						.foregroundColor(Color.secondaryButtonForeground)
+			HStack(spacing: 8) {
+				if let song = playlistViewModel.currentSong {
+					Image(uiImage: image)
+						.resizable()
+						.scaledToFit()
+						.frame(width: 45, height: 45, alignment: .center)
+						.onReceive(imageProvider.image(
+							for: song.image
+						)) { img in
+							image = img ?? UIImage(named: "AudioIconDefault")!
+						}
+						.padding(.horizontal)
+					
+					VStack(alignment: .leading) {
+						Text(song.title)
+							.font(.system(size: 18, weight: .light))
+							.foregroundColor(.primaryFont)
+							.lineLimit(1)
+						Text(song.author)
+							.font(.system(size: 12, weight: .regular))
+							.foregroundColor(.secondaryFont)
+							.lineLimit(1)
+					}
 				}
-				.padding(.horizontal, 64)
-				.padding(.vertical, 16)
+				
 				Spacer()
 				
 				Button(action: {
@@ -60,19 +71,18 @@ struct PlayerControlsView: View {
 				}) {
 					Image(systemName: playlistViewModel.isPlaying ? "pause" : "play")
 						.foregroundColor(Color.primaryButtonForeground)
-						.font(.system(size: verticalSizeClass == .compact ? 28 : 44, weight: .thin))
 				}
+				.padding(.horizontal)
 				
-				Spacer()
 				Button(action: {
 					let _ = playlistViewModel.playNext()
 				}) {
 					Image(systemName: "forward.end")
 						.foregroundColor(Color.secondaryButtonForeground)
 				}
-				.padding(.horizontal, 64)
+				.padding(.horizontal)
 			}
-			.font(.system(size: verticalSizeClass == .compact ? 22 : 32, weight: .thin))
+			.font(.system(size: verticalSizeClass == .compact ? 24 : 32, weight: .thin))
 			.padding(.vertical, verticalSizeClass == .compact ? 2 : 16)
 			.padding(.bottom, safeAreaInsets.bottom)
 			.padding(.horizontal, max(safeAreaInsets.leading, safeAreaInsets.trailing))
@@ -82,6 +92,8 @@ struct PlayerControlsView: View {
 				.reportCurrentPlayerHeight(proxy.frame(in: .global).height)
 		})
 	}
+	
+	
 	
 	private func formatTime(_ interval: TimeInterval) -> String {
 		let formatter = DateComponentsFormatter()
