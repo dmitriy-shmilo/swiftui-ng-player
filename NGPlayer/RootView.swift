@@ -24,9 +24,8 @@ struct RootView: View {
 			}
 			.navigationViewStyle(StackNavigationViewStyle())
 			
-			if currentPlaylist.hasSongs {
+			if currentPlaylist.currentSong != nil {
 				PlayerControlsView()
-					.background(GeometryReader { proxy in })
 			}
 		}
 		.onCurrentPlayerHeightChange { height in
