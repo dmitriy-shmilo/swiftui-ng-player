@@ -3,16 +3,16 @@
 import SwiftUI
 
 extension Color {
-	static var playlisItemBackground: Color {
-		Color("PlaylisItemBackground")
+	static var background: Color {
+		Color("Background")
 	}
-
+	
 	static var primaryButtonForeground: Color {
 		Color("PrimaryButtonForeground")
 	}
-
-	static var background: Color {
-		Color("Background")
+	
+	static var progressBackground: Color {
+		Color("ProgressBackground")
 	}
 
 	static var secondaryButtonForeground: Color {
@@ -30,5 +30,4 @@ extension Color {
 	static var secondaryFont: Color {
 		Color("SecondaryFont")
 	}
-
 }

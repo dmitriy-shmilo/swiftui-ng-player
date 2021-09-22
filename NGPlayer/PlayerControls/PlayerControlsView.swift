@@ -22,6 +22,9 @@ struct PlayerControlsView: View {
 		
 		VStack(spacing: 0) {
 			Divider()
+			SongDurationIndicator(
+				fill: CGFloat(playlistViewModel.currentTime / playlistViewModel.currentDuration)
+			)
 			
 			HStack {
 				Text(formatTime(playlistViewModel.currentTime))

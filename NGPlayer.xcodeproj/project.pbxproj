@@ -18,6 +18,7 @@
 		5D621EDB26F8BBA200573A92 /* HomeItemViewCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D621EDA26F8BBA200573A92 /* HomeItemViewCarousel.swift */; };
 		5D621EDD26FA695300573A92 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D621EDC26FA695300573A92 /* Environment.swift */; };
 		5D621EDF26FA74FC00573A92 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D621EDE26FA74FC00573A92 /* RootView.swift */; };
+		5D91843426FB6A4300B28F6F /* SongDurationIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D91843326FB6A4300B28F6F /* SongDurationIndicator.swift */; };
 		5DE051D926F4B223005FD7C1 /* NGPlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */; };
 		5DE051DB26F4B223005FD7C1 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE051DA26F4B223005FD7C1 /* PlaylistView.swift */; };
 		5DE051DD26F4B227005FD7C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DE051DC26F4B227005FD7C1 /* Assets.xcassets */; };
@@ -44,6 +45,7 @@
 		5D621EDA26F8BBA200573A92 /* HomeItemViewCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeItemViewCarousel.swift; sourceTree = "<group>"; };
 		5D621EDC26FA695300573A92 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		5D621EDE26FA74FC00573A92 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		5D91843326FB6A4300B28F6F /* SongDurationIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDurationIndicator.swift; sourceTree = "<group>"; };
 		5DE051D526F4B223005FD7C1 /* NGPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NGPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NGPlayerApp.swift; sourceTree = "<group>"; };
 		5DE051DA26F4B223005FD7C1 /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
@@ -92,6 +94,15 @@
 			path = Api;
 			sourceTree = "<group>";
 		};
+		5D91843226FB672C00B28F6F /* PlayerControls */ = {
+			isa = PBXGroup;
+			children = (
+				5DED697226F4C17700199A34 /* PlayerControlsView.swift */,
+				5D91843326FB6A4300B28F6F /* SongDurationIndicator.swift */,
+			);
+			path = PlayerControls;
+			sourceTree = "<group>";
+		};
 		5DE051CC26F4B223005FD7C1 = {
 			isa = PBXGroup;
 			children = (
@@ -111,19 +122,19 @@
 		5DE051D726F4B223005FD7C1 /* NGPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				5D621ED526F65F2700573A92 /* Api */,
 				5DE051E126F4B227005FD7C1 /* Info.plist */,
 				5DED697026F4BF8400199A34 /* Color.swift */,
+				5D621EDC26FA695300573A92 /* Environment.swift */,
 				5DED697826F51A9E00199A34 /* ImageCache.swift */,
 				5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */,
-				5DED697226F4C17700199A34 /* PlayerControlsView.swift */,
+				5D621EDE26FA74FC00573A92 /* RootView.swift */,
 				5DE051DC26F4B227005FD7C1 /* Assets.xcassets */,
+				5D621ED526F65F2700573A92 /* Api */,
 				5DED697A26F54D2700199A34 /* Home */,
 				5D5985F826F606AA0092BC9C /* Model */,
+				5D91843226FB672C00B28F6F /* PlayerControls */,
 				5DE051E726F4B368005FD7C1 /* Playlist */,
 				5DE051DE26F4B227005FD7C1 /* Preview Content */,
-				5D621EDC26FA695300573A92 /* Environment.swift */,
-				5D621EDE26FA74FC00573A92 /* RootView.swift */,
 			);
 			path = NGPlayer;
 			sourceTree = "<group>";
@@ -236,6 +247,7 @@
 				5D621ED726F6614B00573A92 /* ArtCategory.swift in Sources */,
 				5D621ED426F64D5500573A92 /* NGUrl.swift in Sources */,
 				5DED697726F4D00100199A34 /* Song.swift in Sources */,
+				5D91843426FB6A4300B28F6F /* SongDurationIndicator.swift in Sources */,
 				5D621EDF26FA74FC00573A92 /* RootView.swift in Sources */,
 				5D621EDB26F8BBA200573A92 /* HomeItemViewCarousel.swift in Sources */,
 				5DED697526F4CFD300199A34 /* PlaylistViewModel.swift in Sources */,
