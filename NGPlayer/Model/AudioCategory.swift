@@ -24,7 +24,7 @@ extension AudioCategory {
 		case .popular:
 			return "Popular"
 		case .genre(let genre):
-			return genre.localizedLabel()
+			return genre.localizedLabel
 		}
 	}
 	

@@ -48,7 +48,20 @@ class HomeViewModel: ObservableObject {
 			.store(in: &disposeBag)
 	}
 	
+	func imageAssetFor(category: AudioCategory) -> String? {
+		switch category {
+		case .genre(let genre):
+			return genre.assetName
+		default:
+			return nil
+		}
+	}
+	
 	func imageUrlFor(category: AudioCategory) -> URL? {
+		guard art.count > 0 else {
+			return nil
+		}
+
 		if let art = artForCategory[category] {
 			return art.image
 		} else {

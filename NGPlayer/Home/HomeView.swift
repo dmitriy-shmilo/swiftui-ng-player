@@ -24,7 +24,11 @@ struct HomeView: View {
 				VStack {
 					Spacer()
 						.frame(height: safeAreaInsets.top)
-
+					Text("NG Audio Player")
+						.font(.largeTitle.bold())
+						.foregroundColor(.primaryFont)
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.padding()
 					HomeItemViewCarousel(
 						title: "quick picks",
 						items: [

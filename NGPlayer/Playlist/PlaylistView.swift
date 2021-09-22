@@ -11,6 +11,7 @@ struct CategoryPlaylistView: View {
 	
 	let category: AudioCategory
 	let imageUrl: URL?
+	let imageAsset: String?
 	
 	@EnvironmentObject
 	private var viewmodel: PlaylistViewModel
@@ -34,29 +35,40 @@ struct CategoryPlaylistView: View {
 	private var image: UIImage?
 	
 	var body: some View {
-		ZStack(alignment: .top) {
-			if viewmodel.isFullLoading {
-				VStack(alignment: .center) {
-					Spacer()
-					ProgressView()
-						.progressViewStyle(CircularProgressViewStyle(tint: Color.accentColor))
-					Spacer()
+		var result: AnyView = AnyView(
+			ZStack(alignment: .top) {
+				if viewmodel.isFullLoading {
+					VStack(alignment: .center) {
+						Spacer()
+						ProgressView()
+							.progressViewStyle(CircularProgressViewStyle(tint: Color.accentColor))
+						Spacer()
+					}
+				} else {
+					songListView
 				}
-			} else {
-				songListView
+				
+				navBarView
 			}
-
-			navBarView
+				.ignoresSafeArea()
+				.background(Color.background.ignoresSafeArea())
+				.onAppear {
+					viewmodel.load(category: category)
+				}
+				.navigationBarHidden(true)
+		)
+		
+		if let imageUrl = imageUrl {
+			result = AnyView(result.onReceive(imageProvider.image(for: imageUrl), perform: { image in
+				self.image = image
+			}))
+		} else if let imageAsset = imageAsset {
+			result = AnyView(result.onAppear {
+				image = UIImage(named: imageAsset)
+			})
 		}
-		.ignoresSafeArea()
-		.background(Color.background.ignoresSafeArea())
-		.onAppear {
-			viewmodel.load(category: category)
-		}
-		.onReceive(imageProvider.image(for: imageUrl), perform: { image in
-			self.image = image
-		})
-		.navigationBarHidden(true)
+		
+		return result
 	}
 	
 	private var navBarView: some View {
@@ -97,7 +109,7 @@ struct CategoryPlaylistView: View {
 				if !viewmodel.isFullLoading, let image = image {
 					coverImageView(image: image)
 				}
-
+				
 				LazyVStack {
 					ForEach(viewmodel.songs.indices, id: \.self) { i in
 						let song = viewmodel.songs[i]
@@ -105,22 +117,22 @@ struct CategoryPlaylistView: View {
 							song: song,
 							isHighlighted: i == viewmodel.currentIndex
 						)
-						.padding(.leading, safeAreaInsets.leading)
-						.padding(.trailing, safeAreaInsets.trailing)
-						.onTapGesture {
-							withAnimation {
-								let _ = viewmodel.play(index: i)
+							.padding(.leading, safeAreaInsets.leading)
+							.padding(.trailing, safeAreaInsets.trailing)
+							.onTapGesture {
+								withAnimation {
+									let _ = viewmodel.play(index: i)
+								}
 							}
-						}
-						.onAppear {
-							if i == viewmodel.songs.count - 1 {
-								viewmodel.loadMore(category: category)
+							.onAppear {
+								if i == viewmodel.songs.count - 1 {
+									viewmodel.loadMore(category: category)
+								}
 							}
-						}
-						.id(i)
+							.id(i)
 						Divider().padding(.horizontal)
 					}
-
+					
 					Spacer()
 						.frame(height: currentPlayerHeight)
 				}
@@ -155,7 +167,7 @@ struct CategoryPlaylistView: View {
 
 struct CategoryPlaylistView_Previews: PreviewProvider {
 	static var previews: some View {
-		CategoryPlaylistView(category: .featured, imageUrl: nil)
+		CategoryPlaylistView(category: .featured, imageUrl: nil, imageAsset: nil)
 			.environmentObject(PlaylistViewModel())
 	}
 }

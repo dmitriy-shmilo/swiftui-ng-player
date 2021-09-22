@@ -15,7 +15,18 @@ enum Genre: Int {
 
 extension Genre {
 	// TODO: localize
-	func localizedLabel() -> String {
+	var localizedLabel: String {
+		switch self {
+		case .jazz:
+			return "Jazz"
+		case .punk:
+			return "Punk"
+		case .techno:
+			return "Techno"
+		}
+	}
+	
+	var assetName: String? {
 		switch self {
 		case .jazz:
 			return "Jazz"
