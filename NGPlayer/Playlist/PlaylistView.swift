@@ -35,37 +35,41 @@ struct CategoryPlaylistView: View {
 	private var image: UIImage?
 	
 	var body: some View {
-		var result: AnyView = AnyView(
-			ZStack(alignment: .top) {
-				if viewmodel.isFullLoading {
-					VStack(alignment: .center) {
-						Spacer()
-						ProgressView()
-							.progressViewStyle(CircularProgressViewStyle(tint: Color.accentColor))
-						Spacer()
-					}
-				} else {
-					songListView
+		var result =
+		ZStack(alignment: .top) {
+			if viewmodel.isFullLoading {
+				VStack(alignment: .center) {
+					Spacer()
+					ProgressView()
+						.progressViewStyle(CircularProgressViewStyle(tint: Color.accentColor))
+					Spacer()
 				}
-				
-				navBarView
+			} else {
+				songListView
 			}
-				.ignoresSafeArea()
-				.background(Color.background.ignoresSafeArea())
-				.onAppear {
-					viewmodel.load(category: category)
-				}
-				.navigationBarHidden(true)
-		)
+			
+			navBarView
+		}
+		.ignoresSafeArea()
+		.background(Color.background.ignoresSafeArea())
+		.onAppear {
+			viewmodel.load(category: category)
+		}
+		.navigationBarHidden(true)
+		.eraseToAnyView()
+		
 		
 		if let imageUrl = imageUrl {
-			result = AnyView(result.onReceive(imageProvider.image(for: imageUrl), perform: { image in
-				self.image = image
-			}))
+			result = result.onReceive(
+				imageProvider.image(for: imageUrl)) { image in
+					self.image = image
+				}
+				.eraseToAnyView()
 		} else if let imageAsset = imageAsset {
-			result = AnyView(result.onAppear {
+			result = result.onAppear {
 				image = UIImage(named: imageAsset)
-			})
+			}
+			.eraseToAnyView()
 		}
 		
 		return result

@@ -27,22 +27,7 @@ struct HomeItemView: View {
 			destination: CategoryPlaylistView(category: item, imageUrl: imageUrl, imageAsset: imageAsset)
 		) {
 			ZStack(alignment:.bottom) {
-				if let imageAsset = imageAsset {
-					Image(imageAsset)
-						.resizable()
-						.scaledToFill()
-						.frame(width: 180, height: 180)
-				} else if let image = image {
-					Image(uiImage: image)
-						.resizable()
-						.scaledToFill()
-						.frame(width: 180, height: 180)
-				} else {
-					// TODO: return a placeholder image
-					Spacer()
-						.frame(width: 180, height: 180)
-				}
-				
+				imageView
 				Text(item.localizedLabel)
 					.font(.title2)
 					.foregroundColor(.primaryFont)
@@ -65,10 +50,35 @@ struct HomeItemView: View {
 					}
 				}
 			})
-			.onReceive(imageProvider.image(for: imageUrl), perform: { image in
-				self.image = image
-			})
 		}
+	}
+	
+	private var imageView: some View {
+		var result: AnyView
+		if let imageAsset = imageAsset {
+			result = Image(imageAsset)
+				.resizable()
+				.scaledToFill()
+				.eraseToAnyView()
+		} else if let image = image {
+			result = Image(uiImage: image)
+				.resizable()
+				.scaledToFill()
+				.eraseToAnyView()
+		} else {
+			// TODO: return a placeholder image
+			result = Spacer()
+				.eraseToAnyView()
+		}
+		
+		if let imageUrl = imageUrl {
+			result = result.onReceive(imageProvider.image(for: imageUrl), perform: { image in
+				self.image = image
+			}).eraseToAnyView()
+		}
+		
+		return result
+			.frame(width: 180, height: 180)
 	}
 }
 
