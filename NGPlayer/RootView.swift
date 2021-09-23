@@ -35,6 +35,7 @@ struct RootView: View {
 		.ignoresSafeArea()
 		.environmentObject(imageProvider)
 		.environmentObject(currentPlaylist)
+		.preferredColorScheme(.dark)
 	}
 }
 
