@@ -115,8 +115,11 @@ struct CategoryPlaylistView: View {
 				}
 				
 				LazyVStack {
+					playlistButton
+
 					ForEach(viewmodel.songs.indices, id: \.self) { i in
 						let song = viewmodel.songs[i]
+						Divider().padding(.horizontal)
 						PlaylistItemView(
 							song: song,
 							isHighlighted: i == viewmodel.currentIndex
@@ -134,7 +137,6 @@ struct CategoryPlaylistView: View {
 								}
 							}
 							.id(i)
-						Divider().padding(.horizontal)
 					}
 					
 					Spacer()
@@ -148,6 +150,36 @@ struct CategoryPlaylistView: View {
 				}
 			})
 		}
+	}
+	
+	private var playlistButton: some View {
+		HStack {
+			Spacer()
+			Button(action: {
+				let _ = viewmodel.togglePlay()
+			}) {
+				Image(systemName: viewmodel.isPlaying ? "pause" : "play.fill")
+					.resizable()
+					.scaledToFit()
+					.foregroundColor(.accentColor)
+					.frame(width: 32, height: 32)
+					// "play" icon is a bit heavy on the left
+					.offset(x: viewmodel.isPlaying ? 0 : 4)
+			}
+			.frame(width: 64, height: 64)
+			.background(LinearGradient(
+				gradient: Gradient(colors: [
+					Color.buttonBackground1,
+					Color.buttonBackground2
+				]),
+				startPoint: .topLeading,
+				endPoint: .bottomTrailing
+			))
+			.overlay(Circle().stroke(Color.buttonBorderBackground, lineWidth: 2))
+			.clipShape(Circle())
+			.padding()
+		}
+		.frame(height: 16)
 	}
 	
 	private var coverImageHeight: CGFloat {
