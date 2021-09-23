@@ -114,8 +114,9 @@ struct CategoryPlaylistView: View {
 					coverImageView(image: image)
 				}
 				
-				LazyVStack {
+				LazyVStack(spacing: 0) {
 					playlistButton
+						.zIndex(1)
 
 					ForEach(viewmodel.songs.indices, id: \.self) { i in
 						let song = viewmodel.songs[i]
@@ -179,7 +180,7 @@ struct CategoryPlaylistView: View {
 			.clipShape(Circle())
 			.padding()
 		}
-		.frame(height: 16)
+		.frame(height: 0)
 	}
 	
 	private var coverImageHeight: CGFloat {
