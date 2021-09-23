@@ -60,14 +60,7 @@ struct PlayerControlsView: View {
 				Spacer()
 				
 				Button(action: {
-					switch playlistViewModel.state {
-					case .playing:
-						playlistViewModel.pause()
-					case .paused:
-						let _ = playlistViewModel.resume()
-					default:
-						let _ = playlistViewModel.playNext()
-					}
+					let _ = playlistViewModel.togglePlay()
 				}) {
 					Image(systemName: playlistViewModel.isPlaying ? "pause" : "play")
 						.foregroundColor(Color.primaryButtonForeground)

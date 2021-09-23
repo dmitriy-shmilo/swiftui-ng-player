@@ -189,6 +189,19 @@ class PlaylistViewModel: ObservableObject {
 		return true
 	}
 	
+	func togglePlay() -> Bool {
+		switch state {
+		case .playing:
+			pause()
+			return true
+		case .paused:
+			resume()
+			return true
+		default:
+			return playNext()
+		}
+	}
+
 	func playNext() -> Bool {
 		return play(index: currentIndex >= songs.count - 1 ? 0 : currentIndex + 1)
 	}
