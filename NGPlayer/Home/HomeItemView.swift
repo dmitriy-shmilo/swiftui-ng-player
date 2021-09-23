@@ -36,7 +36,10 @@ struct HomeItemView: View {
 					.background(Color.black.opacity(0.35))
 			}
 			.background(LinearGradient(
-				gradient: Gradient(colors: [Color(#colorLiteral(red: 0.2378290296, green: 0.2470975518, blue: 0.264349848, alpha: 1)), Color(#colorLiteral(red: 0.2731795907, green: 0.2823192477, blue: 0.3039281964, alpha: 1))]),
+				gradient: Gradient(colors: [
+					Color.buttonBackground1,
+					Color.buttonBackground2
+				]),
 				startPoint: .topLeading,
 				endPoint: .bottomTrailing
 			))

@@ -18,7 +18,7 @@ struct SongDurationIndicator: View {
 					path.move(to: CGPoint(x: 0, y: 0))
 					path.addLine(to: CGPoint(x: proxy.size.width, y: 0))
 				}
-				.stroke(Color.progressBackground, style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
+				.stroke(Color.buttonBorderBackground, style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
 				
 				let fill = max(0, min(fill, 1.0))
 				Path { path in
