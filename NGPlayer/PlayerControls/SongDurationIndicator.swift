@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-// TODO: add a seek handle
 struct SongDurationIndicator: View {
-	let fill: CGFloat
+	let progress: Double
+	let onSeek: (Double) -> Void
 	
 	var body: some View {
 		GeometryReader { proxy in
@@ -18,7 +18,7 @@ struct SongDurationIndicator: View {
 					.fill(Color.buttonBorderBackground)
 					.frame(width: proxy.size.width, height: 5)
 
-				let fill = max(0, min(fill, 1.0))
+				let fill = CGFloat(max(0, min(progress, 1.0)))
 				Rectangle()
 					.fill(Color.accentColor)
 					.frame(width: proxy.size.width * fill, height: 3)
@@ -28,6 +28,9 @@ struct SongDurationIndicator: View {
 					.frame(width: 9, height: 9)
 					.offset(x: proxy.size.width * fill)
 			}
+			.gesture(DragGesture(minimumDistance: 0).onChanged { value in
+				onSeek(Double(value.location.x / proxy.size.width))
+			})
 		}
 		.frame(height:9)
 	}
@@ -35,6 +38,6 @@ struct SongDurationIndicator: View {
 
 struct SongDurationIndicator_Previews: PreviewProvider {
 	static var previews: some View {
-		SongDurationIndicator(fill: 0.3)
+		SongDurationIndicator(progress: 0.3) { _ in }
 	}
 }

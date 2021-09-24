@@ -240,6 +240,13 @@ class PlaylistViewModel: ObservableObject {
 		}
 	}
 	
+	func seek(value: Double) {
+		guard currentDuration > 0 && currentDuration.isFinite && !currentDuration.isNaN else {
+			return
+		}
+		player.seek(to: CMTimeMakeWithSeconds(currentDuration * value, preferredTimescale: Int32(NSEC_PER_SEC)))
+	}
+	
 	@objc private func onPlayerComplete() {
 		let _ = playNext()
 	}

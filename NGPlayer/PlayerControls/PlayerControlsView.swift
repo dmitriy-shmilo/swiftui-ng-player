@@ -29,7 +29,10 @@ struct PlayerControlsView: View {
 		VStack(spacing: 0) {
 			Divider()
 			SongDurationIndicator(
-				fill: CGFloat(playlistViewModel.currentTime / playlistViewModel.currentDuration)
+				progress: CGFloat(playlistViewModel.currentTime / playlistViewModel.currentDuration),
+				onSeek: { value in
+					playlistViewModel.seek(value: value)
+				}
 			)
 			
 			HStack(spacing: 8) {
