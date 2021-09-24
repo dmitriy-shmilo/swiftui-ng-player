@@ -12,23 +12,24 @@ struct SongDurationIndicator: View {
 	let fill: CGFloat
 	
 	var body: some View {
-		ZStack {
-			GeometryReader { proxy in
-				Path { path in
-					path.move(to: CGPoint(x: 0, y: 0))
-					path.addLine(to: CGPoint(x: proxy.size.width, y: 0))
-				}
-				.stroke(Color.buttonBorderBackground, style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
-				
+		GeometryReader { proxy in
+			ZStack(alignment: .leading) {
+				Rectangle()
+					.fill(Color.buttonBorderBackground)
+					.frame(width: proxy.size.width, height: 5)
+
 				let fill = max(0, min(fill, 1.0))
-				Path { path in
-					path.move(to: CGPoint(x: 0, y: 0))
-					path.addLine(to: CGPoint(x: proxy.size.width * fill, y: 0))
-				}
-				.stroke(Color.accentColor, style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
+				Rectangle()
+					.fill(Color.accentColor)
+					.frame(width: proxy.size.width * fill, height: 3)
+				
+				Circle()
+					.fill(Color.accentColor)
+					.frame(width: 9, height: 9)
+					.offset(x: proxy.size.width * fill)
 			}
-			.frame(height:5)
 		}
+		.frame(height:9)
 	}
 }
 
