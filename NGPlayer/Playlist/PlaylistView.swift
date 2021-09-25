@@ -56,11 +56,13 @@ struct CategoryPlaylistView: View {
 		.ignoresSafeArea()
 		.background(Color.background.ignoresSafeArea())
 		.onAppear {
-			viewmodel.load(category: category)
+			// TODO: don't reload a playlist if it was recently loaded
+			if playerViewModel.currentPlaylist !== viewmodel {
+				viewmodel.load(category: category)
+			}
 		}
 		.navigationBarHidden(true)
 		.eraseToAnyView()
-		
 		
 		if let imageUrl = imageUrl {
 			result = result.onReceive(
