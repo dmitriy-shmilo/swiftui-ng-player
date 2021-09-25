@@ -9,11 +9,11 @@ import SwiftUI
 
 struct PlayerControlsView: View {
 	
+	@ObservedObject
+	var playerViewModel: PlayerViewModel
+
 	@EnvironmentObject
 	private var imageProvider: ImageProvider
-	
-	@EnvironmentObject
-	private var playlistViewModel: PlaylistViewModel
 	
 	@Environment(\.safeAreaInsets)
 	private var safeAreaInsets
@@ -29,14 +29,14 @@ struct PlayerControlsView: View {
 		VStack(spacing: 0) {
 			Divider()
 			SongDurationIndicator(
-				progress: CGFloat(playlistViewModel.currentTime / playlistViewModel.currentDuration),
+				progress: playerViewModel.currentProgress,
 				onSeek: { value in
-					playlistViewModel.seek(value: value)
+					playerViewModel.seek(value: value)
 				}
 			)
 			
 			HStack(spacing: 8) {
-				if let song = playlistViewModel.currentSong {
+				if let song = playerViewModel.currentPlaylist?.currentSong {
 					Image(uiImage: image)
 						.resizable()
 						.scaledToFit()
@@ -63,15 +63,15 @@ struct PlayerControlsView: View {
 				Spacer()
 				
 				Button(action: {
-					let _ = playlistViewModel.togglePlay()
+					let _ = playerViewModel.togglePlay()
 				}) {
-					Image(systemName: playlistViewModel.isPlaying ? "pause" : "play")
+					Image(systemName: playerViewModel.isPlaying ? "pause" : "play")
 						.foregroundColor(Color.primaryButtonForeground)
 				}
 				.padding(.horizontal)
 				
 				Button(action: {
-					let _ = playlistViewModel.playNext()
+					let _ = playerViewModel.playNext()
 				}) {
 					Image(systemName: "forward.end")
 						.foregroundColor(Color.secondaryButtonForeground)
@@ -89,8 +89,6 @@ struct PlayerControlsView: View {
 		})
 	}
 	
-	
-	
 	private func formatTime(_ interval: TimeInterval) -> String {
 		let formatter = DateComponentsFormatter()
 		formatter.allowedUnits = [.minute, .second]
@@ -102,6 +100,6 @@ struct PlayerControlsView: View {
 
 struct PlayerControlsView_Previews: PreviewProvider {
 	static var previews: some View {
-		PlayerControlsView()
+		PlayerControlsView(playerViewModel: PlayerViewModel())
 	}
 }

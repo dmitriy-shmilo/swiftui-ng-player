@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RootView: View {
 	@StateObject
-	private var currentPlaylist = PlaylistViewModel()
+	private var playerViewModel = PlayerViewModel()
 	
 	@StateObject
 	private var imageProvider = ImageProvider()
@@ -20,12 +20,12 @@ struct RootView: View {
 	var body: some View {
 		ZStack(alignment: .bottom) {
 			NavigationView {
-				HomeView()
+				HomeView(playerViewModel: playerViewModel)
 			}
 			.navigationViewStyle(StackNavigationViewStyle())
 			
-			if currentPlaylist.currentSong != nil {
-				PlayerControlsView()
+			if case .idle = playerViewModel.state {} else {
+				PlayerControlsView(playerViewModel: playerViewModel)
 			}
 		}
 		.onCurrentPlayerHeightChange { height in
@@ -34,7 +34,7 @@ struct RootView: View {
 		.currentPlayerHeight(currentPlayerHeight)
 		.ignoresSafeArea()
 		.environmentObject(imageProvider)
-		.environmentObject(currentPlaylist)
+		.environmentObject(playerViewModel)
 		.preferredColorScheme(.dark)
 	}
 }

@@ -13,8 +13,11 @@ struct CategoryPlaylistView: View {
 	let imageUrl: URL?
 	let imageAsset: String?
 	
+	@ObservedObject
+	var viewmodel: PlaylistViewModel
+	
 	@EnvironmentObject
-	private var viewmodel: PlaylistViewModel
+	private var playerViewModel: PlayerViewModel
 	
 	@EnvironmentObject
 	private var imageProvider: ImageProvider
@@ -128,8 +131,9 @@ struct CategoryPlaylistView: View {
 							.padding(.leading, safeAreaInsets.leading)
 							.padding(.trailing, safeAreaInsets.trailing)
 							.onTapGesture {
+								playerViewModel.ensureCurrentPlaylist(is: viewmodel)
 								withAnimation {
-									let _ = viewmodel.play(index: i)
+									let _ = playerViewModel.play(index: i)
 								}
 							}
 							.onAppear {
@@ -157,15 +161,16 @@ struct CategoryPlaylistView: View {
 		HStack {
 			Spacer()
 			Button(action: {
-				let _ = viewmodel.togglePlay()
+				playerViewModel.ensureCurrentPlaylist(is: viewmodel)
+				let _ = playerViewModel.togglePlay()
 			}) {
-				Image(systemName: viewmodel.isPlaying ? "pause" : "play.fill")
+				Image(systemName: playerViewModel.isPlaying ? "pause" : "play.fill")
 					.resizable()
 					.scaledToFit()
 					.foregroundColor(.accentColor)
 					.frame(width: 32, height: 32)
 					// "play" icon is a bit heavy on the left
-					.offset(x: viewmodel.isPlaying ? 0 : 4)
+					.offset(x: playerViewModel.isPlaying ? 0 : 4)
 			}
 			.frame(width: 64, height: 64)
 			.background(LinearGradient(
@@ -204,7 +209,11 @@ struct CategoryPlaylistView: View {
 
 struct CategoryPlaylistView_Previews: PreviewProvider {
 	static var previews: some View {
-		CategoryPlaylistView(category: .featured, imageUrl: nil, imageAsset: nil)
-			.environmentObject(PlaylistViewModel())
+		CategoryPlaylistView(
+			category: .featured,
+			imageUrl: nil,
+			imageAsset: nil,
+			viewmodel: PlaylistViewModel(category: .featured)
+		)
 	}
 }

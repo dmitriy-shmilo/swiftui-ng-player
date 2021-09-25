@@ -9,6 +9,9 @@ import SwiftUI
 
 struct HomeView: View {
 
+	@ObservedObject
+	var playerViewModel: PlayerViewModel
+
 	@StateObject
 	private var viewModel = HomeViewModel()
 	
@@ -66,7 +69,7 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
 	static var previews: some View {
-		HomeView()
+		HomeView(playerViewModel: PlayerViewModel())
 			.environmentObject(HomeViewModel())
 	}
 }

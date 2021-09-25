@@ -19,6 +19,7 @@
 		5D621EDD26FA695300573A92 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D621EDC26FA695300573A92 /* Environment.swift */; };
 		5D621EDF26FA74FC00573A92 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D621EDE26FA74FC00573A92 /* RootView.swift */; };
 		5D91843426FB6A4300B28F6F /* SongDurationIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D91843326FB6A4300B28F6F /* SongDurationIndicator.swift */; };
+		5DA2B85B26FE203A0027CD2F /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA2B85A26FE203A0027CD2F /* PlayerViewModel.swift */; };
 		5DE051D926F4B223005FD7C1 /* NGPlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */; };
 		5DE051DB26F4B223005FD7C1 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE051DA26F4B223005FD7C1 /* PlaylistView.swift */; };
 		5DE051DD26F4B227005FD7C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DE051DC26F4B227005FD7C1 /* Assets.xcassets */; };
@@ -47,6 +48,7 @@
 		5D621EDC26FA695300573A92 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		5D621EDE26FA74FC00573A92 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5D91843326FB6A4300B28F6F /* SongDurationIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDurationIndicator.swift; sourceTree = "<group>"; };
+		5DA2B85A26FE203A0027CD2F /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
 		5DE051D526F4B223005FD7C1 /* NGPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NGPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NGPlayerApp.swift; sourceTree = "<group>"; };
 		5DE051DA26F4B223005FD7C1 /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			children = (
 				5DED697226F4C17700199A34 /* PlayerControlsView.swift */,
 				5D91843326FB6A4300B28F6F /* SongDurationIndicator.swift */,
+				5DA2B85A26FE203A0027CD2F /* PlayerViewModel.swift */,
 			);
 			path = PlayerControls;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 				5DE051D926F4B223005FD7C1 /* NGPlayerApp.swift in Sources */,
 				5D621EDD26FA695300573A92 /* Environment.swift in Sources */,
 				5D5985FE26F607190092BC9C /* AudioCategory.swift in Sources */,
+				5DA2B85B26FE203A0027CD2F /* PlayerViewModel.swift in Sources */,
 				5D5985FC26F606EE0092BC9C /* Art.swift in Sources */,
 				5DE465A126FB7D0D00515FF0 /* View.swift in Sources */,
 				5D621ED926F7538D00573A92 /* NGApi.swift in Sources */,
