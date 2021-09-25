@@ -159,18 +159,24 @@ struct CategoryPlaylistView: View {
 	
 	private var playlistButton: some View {
 		HStack {
+			let isPlaying = playerViewModel.isPlaying
+				&& playerViewModel.currentPlaylist === viewmodel
 			Spacer()
 			Button(action: {
-				playerViewModel.ensureCurrentPlaylist(is: viewmodel)
-				let _ = playerViewModel.togglePlay()
+				if playerViewModel.currentPlaylist === viewmodel {
+					let _ = playerViewModel.togglePlay()
+				} else {
+					playerViewModel.ensureCurrentPlaylist(is: viewmodel)
+					let _ = playerViewModel.playNext()
+				}
 			}) {
-				Image(systemName: playerViewModel.isPlaying ? "pause" : "play.fill")
+				Image(systemName: isPlaying ? "pause" : "play.fill")
 					.resizable()
 					.scaledToFit()
 					.foregroundColor(.accentColor)
 					.frame(width: 32, height: 32)
 					// "play" icon is a bit heavy on the left
-					.offset(x: playerViewModel.isPlaying ? 0 : 4)
+					.offset(x: isPlaying ? 0 : 4)
 			}
 			.frame(width: 64, height: 64)
 			.background(LinearGradient(
