@@ -24,12 +24,12 @@ struct HomeItemView: View {
 	
 	var body: some View {
 		NavigationLink(
-			destination: CategoryPlaylistView(
+			destination: LazyView(CategoryPlaylistView(
 				category: item,
 				imageUrl: imageUrl,
 				imageAsset: imageAsset,
 				viewmodel: PlaylistViewModel(category: item)
-			)
+			))
 		) {
 			ZStack(alignment:.bottom) {
 				imageView

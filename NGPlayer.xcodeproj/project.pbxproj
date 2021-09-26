@@ -20,6 +20,7 @@
 		5D621EDF26FA74FC00573A92 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D621EDE26FA74FC00573A92 /* RootView.swift */; };
 		5D91843426FB6A4300B28F6F /* SongDurationIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D91843326FB6A4300B28F6F /* SongDurationIndicator.swift */; };
 		5DA2B85B26FE203A0027CD2F /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA2B85A26FE203A0027CD2F /* PlayerViewModel.swift */; };
+		5DA2B85D27008B8C0027CD2F /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA2B85C27008B8C0027CD2F /* LazyView.swift */; };
 		5DE051D926F4B223005FD7C1 /* NGPlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */; };
 		5DE051DB26F4B223005FD7C1 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE051DA26F4B223005FD7C1 /* PlaylistView.swift */; };
 		5DE051DD26F4B227005FD7C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DE051DC26F4B227005FD7C1 /* Assets.xcassets */; };
@@ -49,6 +50,7 @@
 		5D621EDE26FA74FC00573A92 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5D91843326FB6A4300B28F6F /* SongDurationIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDurationIndicator.swift; sourceTree = "<group>"; };
 		5DA2B85A26FE203A0027CD2F /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
+		5DA2B85C27008B8C0027CD2F /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		5DE051D526F4B223005FD7C1 /* NGPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NGPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NGPlayerApp.swift; sourceTree = "<group>"; };
 		5DE051DA26F4B223005FD7C1 /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				5DED697026F4BF8400199A34 /* Color.swift */,
 				5D621EDC26FA695300573A92 /* Environment.swift */,
 				5DED697826F51A9E00199A34 /* ImageCache.swift */,
+				5DA2B85C27008B8C0027CD2F /* LazyView.swift */,
 				5DE051D826F4B223005FD7C1 /* NGPlayerApp.swift */,
 				5D621EDE26FA74FC00573A92 /* RootView.swift */,
 				5DE465A026FB7D0D00515FF0 /* View.swift */,
@@ -261,6 +264,7 @@
 				5D59860026F607470092BC9C /* HomeItemView.swift in Sources */,
 				5D5985F726F5EA9B0092BC9C /* HomeViewModel.swift in Sources */,
 				5DED697926F51A9E00199A34 /* ImageCache.swift in Sources */,
+				5DA2B85D27008B8C0027CD2F /* LazyView.swift in Sources */,
 				5DE051DB26F4B223005FD7C1 /* PlaylistView.swift in Sources */,
 				5DED697326F4C17700199A34 /* PlayerControlsView.swift in Sources */,
 				5DED697126F4BF8400199A34 /* Color.swift in Sources */,
