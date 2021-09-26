@@ -21,11 +21,11 @@ class PlaylistViewModel: ObservableObject {
 	let category: AudioCategory
 
 	@Published
-	var state = State.idle
+	private(set) var state = State.idle
 	@Published
-	var songs = [Song]()
+	private(set) var songs = [Song]()
 	@Published
-	var currentIndex: Int = -1
+	private(set) var currentIndex: Int = -1
 	
 	var currentSong: Song? {
 		currentIndex < 0 || currentIndex >= songs.count ? nil : songs[currentIndex]
@@ -90,5 +90,14 @@ class PlaylistViewModel: ObservableObject {
 					self?.songs.append(contentsOf: songs)
 				})
 		)
+	}
+	
+	func select(_ index: Int) {
+		guard index >= 0 && index < songs.count else {
+			print("Attempt to select a song outside of playlist bounds")
+			return
+		}
+		
+		currentIndex = index
 	}
 }

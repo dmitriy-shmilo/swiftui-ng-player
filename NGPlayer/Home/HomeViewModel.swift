@@ -18,7 +18,8 @@ class HomeViewModel: ObservableObject {
 		case error
 	}
 
-	@Published var state: State = .idle
+	@Published
+	private(set) var state: State = .idle
 	
 	private var artForCategory = [AudioCategory : Art]()
 	private var art = [Art]()

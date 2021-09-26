@@ -19,13 +19,13 @@ class PlayerViewModel: ObservableObject {
 	}
 	
 	@Published
-	var state = State.idle
+	private(set) var state = State.idle
 	@Published
-	var currentDuration: TimeInterval = 0
+	private(set) var currentDuration: TimeInterval = 0
 	@Published
-	var currentTime: TimeInterval = 0
+	private(set) var currentTime: TimeInterval = 0
 	@Published
-	var currentPlaylist: PlaylistViewModel?
+	private(set) var currentPlaylist: PlaylistViewModel?
 	
 	var currentProgress: Double {
 		guard currentDuration > 0 && currentTime > 0 else {
@@ -118,7 +118,7 @@ class PlayerViewModel: ObservableObject {
 			resume()
 			return true
 		} else {
-			playlist.currentIndex = index
+			playlist.select(index)
 		}
 		
 		player.replaceCurrentItem(with: nil)
